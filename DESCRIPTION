@@ -1,0 +1,18 @@
+Package: LakehouseClient
+Type: Package
+Title: Access and interact with the Lakehouse Infrastructure
+Version: 1.0.0
+Author: Danilo <danilo.dcs09@gmail.com>
+Maintainer: Danilo <danilo.dcs09@gmail.com>
+License: MIT + file LICENSE
+Description: This documentation can be used as a guide to install and use the lakehouse R package
+Imports:
+    httr (>= 1.4.2),
+    jsonlite (>= 1.7.2),
+    readxl (>= 1.4.4),
+    rvest (>= 1.0.4),
+    arrow (>= 19.0.1)
+Depends:
+    R6 (>= 2.5.0)
+Encoding: UTF-8
+RoxygenNote: 7.3.2
