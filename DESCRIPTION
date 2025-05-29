@@ -11,7 +11,9 @@ Imports:
     jsonlite (>= 1.7.2),
     readxl (>= 1.4.4),
     rvest (>= 1.0.4),
-    arrow (>= 19.0.1)
+    arrow (>= 19.0.1),
+    stringr (>=1.5.1),
+    dplyr (>=1.1.4)
 Depends:
     R6 (>= 2.5.0)
 Encoding: UTF-8

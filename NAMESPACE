@@ -4,5 +4,7 @@ import(jsonlite)
 import(readxl)
 import(rvest)
 import(R6)
+import(stringr)
+import(dplyr)
 
 export(LakehouseClient)

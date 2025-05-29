@@ -8,6 +8,8 @@
 #' @import readxl
 #' @import rvest
 #' @import R6
+#' @import stringr
+#' @import dplyr
 #' @export
 LakehouseClient <- R6::R6Class("LakehouseClient",
     private = list(
@@ -18,6 +20,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         access_token = NULL,
         access_token_type = NULL,
         file_load_path = "/var/tmp",
+
         file_chunk_generator = function(file_path, chunk_size = 1 * 1024 * 1024) {
             file <- file(file_path, "rb")
             on.exit(close(file))
@@ -26,6 +29,74 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 if (length(chunk) == 0) break
                 yield(chunk)
             }
+        },
+        format_size = function(bytes) {
+            kb <- bytes / 1024
+            if (kb < 1024) {
+                size <- sprintf("%.2f KB", kb)
+                return(size)
+            } else {
+                mb <- kb / 1024
+                size <- sprintf("%.2f MB", mb)
+                return(size)
+            }
+        },
+        parse_query_args = function(args) {
+            pattern <- "^\\s*([a-zA-Z_][a-zA-Z0-9_]*)\\s*(=|>=|<=|>|<|\\*)\\s*(.+?)\\s*$"
+            parsed_args <- list()
+
+            for (arg in args) {
+                if (!is.character(arg)) {
+                    stop(sprintf("Arguments must be a string, got: %s", typeof(arg)))
+                }
+
+                match <- str_match(arg, pattern)
+                if (any(is.na(match))) {
+                    stop(sprintf("Invalid format: '%s'. Expected format: (KEY)(OPERATOR)(VALUE). Ex: 'collection_name=lakehouse'", arg))
+                }
+
+                parsed_args <- append(parsed_args, list(list(key = match[2], op = match[3], value = match[4])))
+            }
+
+            return(parsed_args)
+        },
+        df_to_tablestring = function(df) {
+            col_widths <- sapply(names(df), function(col) {
+                max(nchar(as.character(df[[col]]), type = "width"), na.rm = TRUE)
+            })
+            col_widths <- pmax(col_widths, nchar(names(df)))
+
+            header <- paste0("| ", paste(sprintf("%-*s", col_widths, names(df)), collapse = " | "), " |")
+            separator <- paste0("|-", paste(strrep("-", col_widths), collapse = "-|-"), "-|")
+
+            rows <- apply(df, 1, function(row) {
+                paste0("| ", paste(sprintf("%-*s", col_widths, as.character(row)), collapse = " | "), " |")
+            })
+
+            output <- paste(c(header, separator, rows), collapse = "\n")
+
+            return(output)
+        },
+        format_output = function(data, output_format) {
+            if (output_format == "json") {
+                return(jsonlite::toJSON(data, pretty = TRUE, auto_unbox = TRUE))
+            } else if (output_format == "df") {
+                df <- as.data.frame(do.call(rbind, data))
+                if ("id" %in% names(df)) {
+                cols <- c("id", setdiff(names(df), "id"))
+                df <- df[, cols]
+                }
+                return(df)
+            } else if (output_format == "table") {
+                df <- as.data.frame(do.call(rbind, data))
+                if ("id" %in% names(df)) {
+                    cols <- c("id", setdiff(names(df), "id"))
+                    df <- df[, cols]
+                }
+                return(df_to_tablestring(df))
+            }
+
+            return(data)
         }
     ),
   
@@ -35,7 +106,8 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return NULL
         #' @export
         initialize = function(lakehouse_url) {
-            private$lakehouse_url <- lakehouse_url
+            domain <- gsub("^https?://", "", url)
+            private$lakehouse_url <- paste0("http://", domain)
         },
 
         #' Authenticates the lakehouse client
@@ -257,16 +329,78 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             return(df)
         },
 
+        #'
+        #' @return Returns a table-formatted string with the storage buckets in the system
+        #' @export
+        list_buckets = function(){
+            bucket_list <- public$list_buckets_df()
+            table <- private$df_to_tablestring(bucket_list)
+            return(table)
+        },
+
+        #'
+        #' @return Returns an R dataframe with the storage buckets in the system
+        #' @export
+        list_buckets_df = function() {
+            # Lists all the available storage buckets in the system where data can be uploaded
+            
+            headers <- c("Authorization" = paste("Bearer", private$access_token))
+            
+            url <- paste0(private$lakehouse_url, "/storage/bucket-list")
+            
+            response <- httr::POST(
+                url, httr::add_headers(.headers = headers), 
+                config = httr::config(ssl_verifypeer = 0)
+            )
+            
+            respose_text <- httr::content(response, as="text", encoding="UTF-8")
+
+            response_data <- jsonlite::fromJSON(respose_text)
+
+            if (!is.null(response_data$error) || length(response_data$bucket_list) == 0) {
+                return(data.frame())
+            }
+
+            buckets_df <- as.data.frame(response_data$bucket_list)
+            
+            if (nrow(buckets_df) > 0) {
+                buckets_df <- buckets_df[order(buckets_df$bucket_name), , drop = FALSE]
+            }
+            
+            return(buckets_df)
+        },
+
+        #'
+        #' @return Returns a json-formatted string with the storage buckets in the system
+        #' @export
+        list_buckets_json = function(){
+            bucket_list <- public$list_buckets_df()
+            return(jsonlite::toJSON(df, pretty = TRUE))
+        },
+
         #' List collections catalog records
         #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
         #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
-        #' @return A list cotaining collection entries
+        #' @return A R dataframe cotaining the collection records
         #' @export
         list_collections = function(
             sort_by_key = NULL, 
             sort_desc = FALSE
-        ) {
+        ){
+            collection_list <- public$list_collections_df(sort_by_key, sort_desc)
+            table <- private$df_to_tablestring(collection_list)
+            return(table)
+        },
 
+        #' List collections catalog records
+        #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
+        #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
+        #' @return A R dataframe cotaining the collection records
+        #' @export
+        list_collections_df = function(
+            sort_by_key = NULL, 
+            sort_desc = FALSE
+        ) {     
             headers <- c(
                 "Authorization" = paste("Bearer", private$access_token)
             )
@@ -291,16 +425,46 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             data <- jsonlite::fromJSON(response_text)
 
             records <- data$records
-            
-            if (length(records) == 0) {
-                return(list())
+
+            if (length(records) == 0 || is.null(records)) {
+                return(data.frame())
             }
             
-            if (!is.null(sort_by_key)) {
+            if (!is.null(sort_by_key) && sort_by_key %in% names(records)) {
                 records <- records[order(records[[sort_by_key]], decreasing = sort_desc), ]
             }
             
-            return(records)
+            return(as.data.frame(records))
+        },
+
+        list_collections_json = function(
+            sort_by_key = NULL, 
+            sort_desc = FALSE
+        ){
+            collection_list <- public$list_collections_df(sort_by_key, sort_desc)
+            json <- jsonlite::toJSON(collection_list, pretty = TRUE)
+            return(json)
+        },
+
+
+        #' List files catalog records
+        #' @param include_raw A Boolean value indicating if the raw files should be included in the response
+        #' @param include_processed A Boolean value indicating if the processed files should be included in the response
+        #' @param include_curated A Boolean value indicating if the curated files should be included in the response
+        #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
+        #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
+        #' @return A table-formatted string cotaining the file records
+        #' @export
+        list_file = function(
+            include_raw = TRUE, 
+            include_processed = TRUE, 
+            include_curated = TRUE, 
+            sort_by_key = NULL, 
+            sort_desc = FALSE
+        ) {
+            file_records <- public$list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
+            table <- private$df_to_tablestring(file_records)
+            return(table)
         },
 
         #' List files catalog records
@@ -309,9 +473,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @param include_curated A Boolean value indicating if the curated files should be included in the response
         #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
         #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
-        #' @return A list cotaining file entries
+        #' @return A R dataframe cotaining the file records
         #' @export
-        list_files = function(
+        list_files_df = function(
             include_raw = TRUE, 
             include_processed = TRUE, 
             include_curated = TRUE, 
@@ -338,23 +502,45 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             data <- jsonlite::fromJSON(response_text)
             
             records <- data$records
-            
-            if (length(records) == 0) {
-                return(list())
+
+            if (length(records) == 0 || is.null(records)) {
+                return(data.frame())
             }
             
-            if (!is.null(sort_by_key)) {
+            if (!is.null(sort_by_key) && sort_by_key %in% names(records)) {
                 records <- records[order(records[[sort_by_key]], decreasing = sort_desc), ]
             }
             
             filter_options <- c()
+
             if (include_raw) filter_options <- c(filter_options, "raw")
             if (include_processed) filter_options <- c(filter_options, "processed")
             if (include_curated) filter_options <- c(filter_options, "curated")
             
             filtered_data <- records[records$processing_level %in% filter_options, ]
             
-            return(filtered_data)
+            return(as.data.frame(filtered_data))
+        },
+
+
+        #' List files catalog records
+        #' @param include_raw A Boolean value indicating if the raw files should be included in the response
+        #' @param include_processed A Boolean value indicating if the processed files should be included in the response
+        #' @param include_curated A Boolean value indicating if the curated files should be included in the response
+        #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
+        #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
+        #' @return A json-formatted string cotaining the file records
+        #' @export
+        list_files_json = function(
+            include_raw = TRUE, 
+            include_processed = TRUE, 
+            include_curated = TRUE, 
+            sort_by_key = NULL, 
+            sort_desc = FALSE
+        ) {
+            file_records <- public$list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
+            json <- jsonlite::toJSON(file_records, pretty = TRUE)
+            return(json)
         },
 
         #' Upload R dataframes function
@@ -513,85 +699,260 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             return(jsonlite::fromJSON(parsed_response))
         },
 
-        #' Search the catalogs using specified filters
-        #' @param filters A list of filters to be applied to the query transaction. the filtes must follow the structure: list(list(property_name="file_name", operator="=", property_value="Marcel"),list(property_name="property2", operator="=", property_value="test@gmail.com")), Operators migh be ("=",">","<", ">=", "<=", "*") with "*" being the string matching operator fro string patterns
-        #' @param target_catalog A string containing the target catalog for the search method ("files" or "collections")
-        #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
-        #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
-        #' @return Returns a list of catalog records
+        #' Search for collection names using a given keyword
+        #' @param keyword A string containing the keyword to search for, the search will match the collection names to the keyword
+        #' @param output_format A string containing one of the following options ["df", "json", "dict"]
+        #' @return A list of collections in the given output_format
         #' @export
-        search_catalogue = function(filters, target_catalog = "collections", sort_by_key = NULL, sort_desc = FALSE) {      
+        search_collections_by_keyword = function(keyword, output_format) {      
 
-            if(length(filters) == 0) {
-               stop("No filters were specified!")
+            if (!output_format %in% c("df", "json", "dict", "table")) {
+                stop("Must specify output format")
             }
 
-            if (
-                !all(
-                    sapply(
-                        filters, function(x) is.list(x) && "property_name" %in% names(x) && 
-                        "operator" %in% names(x) && "property_value" %in% names(x)
-                    )
+            filters <- list(
+                list(
+                    property_name = "collection_name",
+                    operator = "*",
+                    property_value = keyword
                 )
-            ) {
+            )
+
+            payload <- tryCatch({
+                list(filters = filters)
+            }, error = function(e) {
                 stop("Incorrect filter format!")
-            }
+            })
 
             headers <- c("Authorization" = paste("Bearer", private$access_token))
             
-            payload <- list(filters = filters)
-            
-            url <- paste0(private$lakehouse_url,"/catalog/", target_catalog, "/search")
+            url <- paste0(private$lakehouse_url,"/catalog", "/collections", "/search")
 
             response <- httr::POST(
                 url, httr::add_headers(.headers=headers), 
                 body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
-                config = httr::config(ssl_verifypeer = 0)
+                config = httr::config(ssl_verifypeer = 0),
+                encode = "json"
             )
 
             respose_text <- httr::content(response, as="text", encoding="UTF-8")
             
             response_data <- jsonlite::fromJSON(respose_text)
+
+            records <- response_data$records %||% list()
             
-            if (!is.null(sort_by_key)) {
-                response_data <- response_data[order(response_data[[sort_by_key]], decreasing = sort_desc), ]
-            }
+            records <- private$format_output(data = records, output_format = output_format)
             
-            return(response_data)
+            return(records)
         },
 
-        #'
-        #' @return Returns a list of documents containing the storage bucket and the cloud environment
+        #' Search for file names using a given keyword
+        #' @param keyword A string containing the keyword to search for, the search will match the file names to the keyword
+        #' @param output_format A string containing one of the following options ["df", "json", "dict"]
+        #' @return A list of files in the given output_format
         #' @export
-        list_available_buckets = function() {
-            # Lists all the available storage buckets in the system where data can be uploaded
-            
+        search_files_by_keyword = function(keyword, output_format) {      
+
+            if (!output_format %in% c("df", "json", "dict")) {
+                stop("Must specify output format")
+            }
+
+            filters <- list(
+                list(
+                    property_name = "file_name",
+                    operator = "*",
+                    property_value = keyword
+                )
+            )
+
+            payload <- tryCatch({
+                list(filters = filters)
+            }, error = function(e) {
+                stop("Incorrect filter format!")
+            })
+
             headers <- c("Authorization" = paste("Bearer", private$access_token))
             
-            url <- paste0(private$lakehouse_url, "/storage/bucket-list")
-            
-            response <- httr::POST(
-                url, httr::add_headers(.headers = headers), 
-                config = httr::config(ssl_verifypeer = 0)
-            )
-            
-            respose_text <- httr::content(response, as="text", encoding="UTF-8")
+            url <- paste0(private$lakehouse_url,"/catalog", "/files", "/search")
 
+            response <- httr::POST(
+                url, httr::add_headers(.headers=headers), 
+                body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
+                config = httr::config(ssl_verifypeer = 0),
+                encode = "json"
+            )
+
+            respose_text <- httr::content(response, as="text", encoding="UTF-8")
+            
             response_data <- jsonlite::fromJSON(respose_text)
+
+            records <- response_data$records %||% list()
             
-            if (!is.null(response_data$error)) {
+            records <- private$format_output(data = records, output_format = output_format)
+            
+            return(records)
+        },
+
+        
+        #' 
+        #' @description Search files on the catalogue based on the given filters using query strings.
+        #'
+        #' @param self The object reference (for object-oriented style implementation)
+        #' @param ... Query strings containing search terms in KEY[OPERATOR]VALUE format
+        #' @param output_format A string specifying the output format (default: "dict")
+        #' 
+        #' @section Query String Structure:
+        #' The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+        #' Supported operators:
+        #' \itemize{
+        #'   \item \code{=} - Equal to
+        #'   \item \code{>} - Greater than
+        #'   \item \code{<} - Less than
+        #'   \item \code{>=} - Greater than or equal to
+        #'   \item \code{<=} - Less than or equal to
+        #'   \item \code{*} - Substring match (wildcard)
+        #' }
+        #'
+        #' @section Available Output Formats:
+        #' \describe{
+        #'   \item{\code{"df"}}{Returns results as a data.frame}
+        #'   \item{\code{"json"}}{Returns results as JSON string}
+        #'   \item{\code{"dict"}}{Returns results as named list (default)}
+        #'   \item{\code{"table"}}{Returns results in pretty-printed table format}
+        #' }
+        #' #'
+        #' @return The search results in the requested format. Returns an empty list if no results found or if error occurs.
+        #' 
+        #' @examples
+        #' \dontrun{
+        #' # Basic usage
+        #' search_collections_query(self, 'collection_name*lake')
+        #' 
+        #' # Multiple conditions
+        #' search_collections_query(self,
+        #'                         'collection_name*lake',
+        #'                         'inserted_by=user1@gmail.com',
+        #'                         'inserted_at>1747934722',
+        #'                         'public=TRUE',
+        #'                         output_format='table')
+        #' }
+        #'
+        #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
+        #' @export
+        search_collections_query = function(
+            self,
+            ...,
+            output_format="table"
+        ){
+             if (!output_format %in% c("df", "json", "dict", "table")) {
+                stop("Must specify output format")
+            }
+
+            query_args <- list(...)
+
+            parsed_args <- tryCatch({
+                private$parse_query_args(args = query_args)
+            }, error = function(e) {
+                stop("Failed to parse query arguments")
+            })
+
+            filters <- lapply(parsed_args, function(arg) {
+                list(
+                    property_name = arg$key,
+                    operator = arg$op,
+                    property_value = arg$value
+                )
+            })
+
+            payload <- tryCatch({
+                list(filters = filters)
+            }, error = function(e) {
+                stop("Incorrect filter format!")
+            })
+
+            headers <- c(
+                "Authorization" = paste("Bearer", private$access_token)
+            )
+
+            response <- tryCatch({
+                httr::POST(
+                    url = paste0(private$lakehouse_url, "/catalog/collections/search"),
+                    httr::add_headers(.headers = headers),
+                    body = payload,
+                    encode = "json"
+                )
+            }, error = function(e) {
+                stop("Request failed: ", e$message)
+            })
+
+            if (httr::http_error(response) || !length(httr::content(response))) {
                 return(list())
             }
-            
-            bucket_list <- response_data$bucket_list
-            
-            if (length(bucket_list) == 0) {
+
+            response_content <- httr::content(response, as = "parsed")
+            records <- response_content$records %||% list()
+
+            records <- self$private$format_output(data = records, output_format = output_format)
+
+            return(records)
+        },
+
+        search_files_query = function(
+            self,
+            ...,
+            output_format="table"
+        ){
+            if (!output_format %in% c("df", "json", "dict", "table")) {
+                stop("Must specify output format")
+            }
+
+            query_args <- list(...)
+
+            parsed_args <- tryCatch({
+                private$parse_query_args(args = query_args)
+            }, error = function(e) {
+                stop("Failed to parse query arguments")
+            })
+
+            filters <- lapply(parsed_args, function(arg) {
+                list(
+                    property_name = arg$key,
+                    operator = arg$op,
+                    property_value = arg$value
+                )
+            })
+
+            payload <- tryCatch({
+                list(filters = filters)
+            }, error = function(e) {
+                stop("Incorrect filter format!")
+            })
+
+            headers <- c(
+                "Authorization" = paste("Bearer", private$access_token)
+            )
+
+            response <- tryCatch({
+                httr::POST(
+                    url = paste0(private$lakehouse_url, "/catalog/files/search"),
+                    httr::add_headers(.headers = headers),
+                    body = payload,
+                    encode = "json"
+                )
+            }, error = function(e) {
+                stop("Request failed: ", e$message)
+            })
+
+            if (httr::http_error(response) || !length(httr::content(response))) {
                 return(list())
             }
-            
-            sorted_buckets <- bucket_list[order(sapply(bucket_list, function(item) item$bucket_name))]
-            
-            return(sorted_buckets)
+
+            response_content <- httr::content(response, as = "parsed")
+            records <- response_content$records %||% list()
+
+            records <- self$private$format_output(data = records, output_format = output_format)
+
+            return(records)
         }
     )
 )

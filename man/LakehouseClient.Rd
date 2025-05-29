@@ -4,7 +4,60 @@
 \alias{LakehouseClient}
 \title{LakehouseClient Class}
 \description{
+LakehouseClient Class
+
+LakehouseClient Class
+}
+\details{
 This class allows users to interact with the lakehouse infrastructure via the lakehouse API and other functionalities.
+}
+\section{Query String Structure}{
+
+The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+Supported operators:
+\itemize{
+  \item \code{=} - Equal to
+  \item \code{>} - Greater than
+  \item \code{<} - Less than
+  \item \code{>=} - Greater than or equal to
+  \item \code{<=} - Less than or equal to
+  \item \code{*} - Substring match (wildcard)
+}
+}
+
+\section{Available Output Formats}{
+
+\describe{
+  \item{\code{"df"}}{Returns results as a data.frame}
+  \item{\code{"json"}}{Returns results as JSON string}
+  \item{\code{"dict"}}{Returns results as named list (default)}
+  \item{\code{"table"}}{Returns results in pretty-printed table format}
+}
+#'
+}
+
+\examples{
+
+## ------------------------------------------------
+## Method `LakehouseClient$search_collections_query`
+## ------------------------------------------------
+
+\dontrun{
+# Basic usage
+search_collections_query(self, 'collection_name*lake')
+
+# Multiple conditions
+search_collections_query(self,
+                        'collection_name*lake',
+                        'inserted_by=user1@gmail.com',
+                        'inserted_at>1747934722',
+                        'public=TRUE',
+                        output_format='table')
+}
+
+}
+\seealso{
+\code{\link{parse_query_args}} for the query parsing implementation
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -14,12 +67,21 @@ This class allows users to interact with the lakehouse infrastructure via the la
 \item \href{#method-LakehouseClient-download_file}{\code{LakehouseClient$download_file()}}
 \item \href{#method-LakehouseClient-create_collection}{\code{LakehouseClient$create_collection()}}
 \item \href{#method-LakehouseClient-get_dataframe}{\code{LakehouseClient$get_dataframe()}}
+\item \href{#method-LakehouseClient-list_buckets}{\code{LakehouseClient$list_buckets()}}
+\item \href{#method-LakehouseClient-list_buckets_df}{\code{LakehouseClient$list_buckets_df()}}
+\item \href{#method-LakehouseClient-list_buckets_json}{\code{LakehouseClient$list_buckets_json()}}
 \item \href{#method-LakehouseClient-list_collections}{\code{LakehouseClient$list_collections()}}
-\item \href{#method-LakehouseClient-list_files}{\code{LakehouseClient$list_files()}}
+\item \href{#method-LakehouseClient-list_collections_df}{\code{LakehouseClient$list_collections_df()}}
+\item \href{#method-LakehouseClient-list_collections_json}{\code{LakehouseClient$list_collections_json()}}
+\item \href{#method-LakehouseClient-list_file}{\code{LakehouseClient$list_file()}}
+\item \href{#method-LakehouseClient-list_files_df}{\code{LakehouseClient$list_files_df()}}
+\item \href{#method-LakehouseClient-list_files_json}{\code{LakehouseClient$list_files_json()}}
 \item \href{#method-LakehouseClient-upload_dataframe}{\code{LakehouseClient$upload_dataframe()}}
 \item \href{#method-LakehouseClient-upload_file}{\code{LakehouseClient$upload_file()}}
-\item \href{#method-LakehouseClient-search_catalogue}{\code{LakehouseClient$search_catalogue()}}
-\item \href{#method-LakehouseClient-list_available_buckets}{\code{LakehouseClient$list_available_buckets()}}
+\item \href{#method-LakehouseClient-search_collections_by_keyword}{\code{LakehouseClient$search_collections_by_keyword()}}
+\item \href{#method-LakehouseClient-search_files_by_keyword}{\code{LakehouseClient$search_files_by_keyword()}}
+\item \href{#method-LakehouseClient-search_collections_query}{\code{LakehouseClient$search_collections_query()}}
+\item \href{#method-LakehouseClient-search_files_query}{\code{LakehouseClient$search_files_query()}}
 \item \href{#method-LakehouseClient-clone}{\code{LakehouseClient$clone()}}
 }
 }
@@ -143,6 +205,42 @@ A dataframe representing the file selected
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-list_buckets"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_buckets}{}}}
+\subsection{Method \code{list_buckets()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_buckets()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Returns a table-formatted string with the storage buckets in the system
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-list_buckets_df"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_buckets_df}{}}}
+\subsection{Method \code{list_buckets_df()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_buckets_df()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Returns an R dataframe with the storage buckets in the system
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-list_buckets_json"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_buckets_json}{}}}
+\subsection{Method \code{list_buckets_json()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_buckets_json()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Returns a json-formatted string with the storage buckets in the system
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LakehouseClient-list_collections"></a>}}
 \if{latex}{\out{\hypertarget{method-LakehouseClient-list_collections}{}}}
 \subsection{Method \code{list_collections()}}{
@@ -160,15 +258,45 @@ A dataframe representing the file selected
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A list cotaining collection entries
+A R dataframe cotaining the collection records
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LakehouseClient-list_files"></a>}}
-\if{latex}{\out{\hypertarget{method-LakehouseClient-list_files}{}}}
-\subsection{Method \code{list_files()}}{
+\if{html}{\out{<a id="method-LakehouseClient-list_collections_df"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_collections_df}{}}}
+\subsection{Method \code{list_collections_df()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_files(
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_collections_df(sort_by_key = NULL, sort_desc = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sort_by_key}}{A string containing a valid catalog key to be user for sorting the response}
+
+\item{\code{sort_desc}}{A boolean indicating if the reponse list should be sorted descending}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A R dataframe cotaining the collection records
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-list_collections_json"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_collections_json}{}}}
+\subsection{Method \code{list_collections_json()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_collections_json(sort_by_key = NULL, sort_desc = FALSE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-list_file"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_file}{}}}
+\subsection{Method \code{list_file()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_file(
   include_raw = TRUE,
   include_processed = TRUE,
   include_curated = TRUE,
@@ -193,7 +321,73 @@ A list cotaining collection entries
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A list cotaining file entries
+A table-formatted string cotaining the file records
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-list_files_df"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_files_df}{}}}
+\subsection{Method \code{list_files_df()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_files_df(
+  include_raw = TRUE,
+  include_processed = TRUE,
+  include_curated = TRUE,
+  sort_by_key = NULL,
+  sort_desc = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{include_raw}}{A Boolean value indicating if the raw files should be included in the response}
+
+\item{\code{include_processed}}{A Boolean value indicating if the processed files should be included in the response}
+
+\item{\code{include_curated}}{A Boolean value indicating if the curated files should be included in the response}
+
+\item{\code{sort_by_key}}{A string containing a valid catalog key to be user for sorting the response}
+
+\item{\code{sort_desc}}{A boolean indicating if the reponse list should be sorted descending}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A R dataframe cotaining the file records
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-list_files_json"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-list_files_json}{}}}
+\subsection{Method \code{list_files_json()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_files_json(
+  include_raw = TRUE,
+  include_processed = TRUE,
+  include_curated = TRUE,
+  sort_by_key = NULL,
+  sort_desc = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{include_raw}}{A Boolean value indicating if the raw files should be included in the response}
+
+\item{\code{include_processed}}{A Boolean value indicating if the processed files should be included in the response}
+
+\item{\code{include_curated}}{A Boolean value indicating if the curated files should be included in the response}
+
+\item{\code{sort_by_key}}{A string containing a valid catalog key to be user for sorting the response}
+
+\item{\code{sort_desc}}{A boolean indicating if the reponse list should be sorted descending}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A json-formatted string cotaining the file records
 }
 }
 \if{html}{\out{<hr>}}
@@ -284,46 +478,99 @@ Returns a dataframe containing the catalog record for the inserted file
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LakehouseClient-search_catalogue"></a>}}
-\if{latex}{\out{\hypertarget{method-LakehouseClient-search_catalogue}{}}}
-\subsection{Method \code{search_catalogue()}}{
+\if{html}{\out{<a id="method-LakehouseClient-search_collections_by_keyword"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-search_collections_by_keyword}{}}}
+\subsection{Method \code{search_collections_by_keyword()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_catalogue(
-  filters,
-  target_catalog = "collections",
-  sort_by_key = NULL,
-  sort_desc = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_collections_by_keyword(keyword, output_format)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filters}}{A list of filters to be applied to the query transaction. the filtes must follow the structure: list(list(property_name="file_name", operator="=", property_value="Marcel"),list(property_name="property2", operator="=", property_value="test@gmail.com")), Operators migh be ("=",">","<", ">=", "<=", "*") with "*" being the string matching operator fro string patterns}
+\item{\code{keyword}}{A string containing the keyword to search for, the search will match the collection names to the keyword}
 
-\item{\code{target_catalog}}{A string containing the target catalog for the search method ("files" or "collections")}
-
-\item{\code{sort_by_key}}{A string containing a valid catalog key to be user for sorting the response}
-
-\item{\code{sort_desc}}{A boolean indicating if the reponse list should be sorted descending}
+\item{\code{output_format}}{A string containing one of the following options ["df", "json", "dict"]}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Returns a list of catalog records
+A list of collections in the given output_format
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LakehouseClient-list_available_buckets"></a>}}
-\if{latex}{\out{\hypertarget{method-LakehouseClient-list_available_buckets}{}}}
-\subsection{Method \code{list_available_buckets()}}{
+\if{html}{\out{<a id="method-LakehouseClient-search_files_by_keyword"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-search_files_by_keyword}{}}}
+\subsection{Method \code{search_files_by_keyword()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$list_available_buckets()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_files_by_keyword(keyword, output_format)}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-Returns a list of documents containing the storage bucket and the cloud environment
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{keyword}}{A string containing the keyword to search for, the search will match the file names to the keyword}
+
+\item{\code{output_format}}{A string containing one of the following options ["df", "json", "dict"]}
 }
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of files in the given output_format
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-search_collections_query"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-search_collections_query}{}}}
+\subsection{Method \code{search_collections_query()}}{
+Search files on the catalogue based on the given filters using query strings.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_collections_query(self, ..., output_format = "table")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{self}}{The object reference (for object-oriented style implementation)}
+
+\item{\code{...}}{Query strings containing search terms in KEY[OPERATOR]VALUE format}
+
+\item{\code{output_format}}{A string specifying the output format (default: "dict")}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The search results in the requested format. Returns an empty list if no results found or if error occurs.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+# Basic usage
+search_collections_query(self, 'collection_name*lake')
+
+# Multiple conditions
+search_collections_query(self,
+                        'collection_name*lake',
+                        'inserted_by=user1@gmail.com',
+                        'inserted_at>1747934722',
+                        'public=TRUE',
+                        output_format='table')
+}
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LakehouseClient-search_files_query"></a>}}
+\if{latex}{\out{\hypertarget{method-LakehouseClient-search_files_query}{}}}
+\subsection{Method \code{search_files_query()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_files_query(self, ..., output_format = "table")}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LakehouseClient-clone"></a>}}
