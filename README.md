@@ -19,7 +19,7 @@ To import the main class add the following code into your script:
 library(LakehouseClient)
 ```
 
-To use the libraries functionalities create an object of the class LakehouseClient by adding:
+To use the lakehouse functionalities create an instance of LakehouseClient by running:
 
 ```r
 client <- LakehouseClient$new("lakehouse_app_url")
