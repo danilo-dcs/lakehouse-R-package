@@ -80,7 +80,7 @@ Authenticates the user based on login details. It returns the authentication tok
 
 ---
 
-### `client.create_collection(storage_type, collection_name, namenode_address, bucket_name, collection_description, public, secret)` <a name="clientcreatecollection">:</a>
+### `client.create_collection(storage_type, collection_name, namenode_address, bucket_name, collection_description, public, secret)` <a name="clientcreate_collection">:</a>
 
 **Description:**  
 Creates a new collection of files. Returns the collection's name.
