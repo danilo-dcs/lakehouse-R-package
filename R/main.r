@@ -704,7 +704,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @param output_format A string containing one of the following options ["df", "json", "dict"]
         #' @return A list of collections in the given output_format
         #' @export
-        search_collections_by_keyword = function(keyword, output_format) {      
+        search_collections_by_keyword = function(keyword, output_format="table") {      
 
             if (!output_format %in% c("df", "json", "dict", "table")) {
                 stop("Must specify output format")
@@ -751,7 +751,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @param output_format A string containing one of the following options ["df", "json", "dict"]
         #' @return A list of files in the given output_format
         #' @export
-        search_files_by_keyword = function(keyword, output_format) {      
+        search_files_by_keyword = function(keyword, output_format="table") {      
 
             if (!output_format %in% c("df", "json", "dict")) {
                 stop("Must specify output format")
