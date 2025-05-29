@@ -10,7 +10,7 @@ To intall the library:
 install.packages("devtools")
 library("devtools")
 
-devtools::install_github("danilo-dcs/lakehouse-R-package")
+devtools::install_github("danilo-dcs/lakehouse-R-package"upgrade = "always", dependencies = TRUE)
 ```
 
 To import the main class add the following code into your script:
