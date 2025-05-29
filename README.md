@@ -381,7 +381,7 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 ---
 
-### `client$search_collections_by_keyword()` <a name="clientsearch_collections_by_keyword">:</a>
+### `client$search_collections_by_keyword(keyword, output_format)` <a name="clientsearch_collections_by_keyword">:</a>
 
 **Description**: Search the collections in the catalogue by keyword. Enables discovery of collections of datasets based on a specified keyword
 
@@ -396,7 +396,7 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 ---
 
-### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a>
+### `client$search_collections_query(..., output_format)` <a name="clientsearch_collections_query">:</a>
 
 **Description**: Query the collections in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
@@ -440,7 +440,7 @@ client.search_collections_query('collection_name=covid-cases', output_format='js
 
 ---
 
-### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a>
+### `client$search_files_by_keyword(keyword, output_format)` <a name="clientsearch_files_by_keyword">:</a>
 
 **Description**: Search the files in the catalogue by keyword. Enables discovery of files of datasets based on a specified keyword
 
@@ -455,7 +455,7 @@ client.search_collections_query('collection_name=covid-cases', output_format='js
 
 ---
 
-### `client$search_files_query()` <a name="clientsearch_files_query">:</a>
+### `client$search_files_query(..., output_format)` <a name="clientsearch_files_query">:</a>
 
 **Description**: Query the files in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
