@@ -4,6 +4,15 @@ This R lib supports the access to the lakehouse app via R scripts
 
 ## 📌 Installation and usage
 
+To intall the library:
+
+```r
+install.packages("devtools")
+library("devtools")
+
+devtools::install_github("danilo-dcs/lakehouse-R-package")
+```
+
 To import the main class add the following code into your script:
 
 ```r
