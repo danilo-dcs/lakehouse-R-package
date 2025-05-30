@@ -825,7 +825,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' 
         #' @description Search files on the catalogue based on the given filters using query strings.
         #'
-        #' @param self The object reference (for object-oriented style implementation)
         #' @param ... Query strings containing search terms in KEY[OPERATOR]VALUE format
         #' @param output_format A string specifying the output format (default: "dict")
         #' 
@@ -868,7 +867,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
         #' @export
         search_collections_query = function(
-            self,
             ...,
             output_format="table"
         ){
@@ -929,7 +927,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' 
         #' @description Search files on the catalogue based on the given filters using query strings.
         #'
-        #' @param self The object reference (for object-oriented style implementation)
         #' @param ... Query strings containing search terms in KEY[OPERATOR]VALUE format
         #' @param output_format A string specifying the output format (default: "dict")
         #' 
