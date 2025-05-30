@@ -393,6 +393,10 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 return(data.frame())
             }
 
+            print("RESPONSE")
+            cat(response_data)
+             print("==========")
+
             buckets_df <- as.data.frame(response_data$bucket_list)
             
             if (nrow(buckets_df) > 0) {
