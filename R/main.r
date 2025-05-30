@@ -920,8 +920,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             response_content <- httr::content(response, as = "parsed")
             records <- response_content$records %||% list()
 
-            print(records)
-
             records <- private$format_output(dataset = records, output_format = output_format)
 
             return(records)
@@ -1025,8 +1023,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             response_content <- httr::content(response, as = "parsed")
             records <- response_content$records %||% list()
-
-            print(records)
 
             records <- private$format_output(dataset = records, output_format = output_format)
 
