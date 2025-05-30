@@ -103,7 +103,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 return(jsonlite::toJSON(dataset, pretty = TRUE, auto_unbox = TRUE))
             } else if (output_format == "df") {
 
-                rows_list <- lapply(1:length(dataset[[1]]), function(i) {
+                rows_list <- lapply(seq_along(dataset[[1]]), function(i) {
                     lapply(dataset, `[[`, i)
                 })
 
