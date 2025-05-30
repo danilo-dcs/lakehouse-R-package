@@ -394,7 +394,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             }
 
             print("RESPONSE")
-            cat(response_data)
+            print(response_data)
             print("==========")
 
             buckets_df <- private$format_output(response_data$bucket_list, output_format = "df")
