@@ -127,7 +127,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return NULL
         #' @export
         initialize = function(lakehouse_url) {
-            domain <- gsub("^https?://", "", url)
+            domain <- gsub("^https?://", "", lakehouse_url)
             private$lakehouse_url <- paste0("http://", domain)
         },
 
