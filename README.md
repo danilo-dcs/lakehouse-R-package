@@ -144,7 +144,7 @@ List all available collections.
 - sort_desc (Optional): Boolean value indicating TRUE or FALSE for sorting descendently
 
 **Returns**
-Returns a table-formatted string with the collections records
+Returns a table-formatted string with the collections records. cat() command is recommended to visualize the formatted table
 
 ---
 
@@ -210,7 +210,7 @@ Useful for exploring available resources before querying or downloading.
 
 **Returns:**
 
-- It returns a table-formatted string with the files in the catalog
+- It returns a table-formatted string with the files in the catalog. cat() command is recommended to visualize the formatted table
 
 ---
 
@@ -285,7 +285,7 @@ Buckets represent logical data partitions or storage spaces.
 
 **Returns:**
 
-- It returns a table-formatted string containing all the storage buckets in the system
+- It returns a table-formatted string containing all the storage buckets in the system, cat() command is recommended to visualize the formatted table
 
 ---
 

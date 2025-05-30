@@ -23,9 +23,30 @@ Supported operators:
   \item \code{<=} - Less than or equal to
   \item \code{*} - Substring match (wildcard)
 }
+
+
+The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+Supported operators:
+\itemize{
+  \item \code{=} - Equal to
+  \item \code{>} - Greater than
+  \item \code{<} - Less than
+  \item \code{>=} - Greater than or equal to
+  \item \code{<=} - Less than or equal to
+  \item \code{*} - Substring match (wildcard)
+}
 }
 
 \section{Available Output Formats}{
+
+\describe{
+  \item{\code{"df"}}{Returns results as a data.frame}
+  \item{\code{"json"}}{Returns results as JSON string}
+  \item{\code{"dict"}}{Returns results as named list (default)}
+  \item{\code{"table"}}{Returns results in pretty-printed table format}
+}
+#'
+
 
 \describe{
   \item{\code{"df"}}{Returns results as a data.frame}
@@ -55,8 +76,28 @@ search_collections_query(self,
                         output_format='table')
 }
 
+
+## ------------------------------------------------
+## Method `LakehouseClient$search_files_query`
+## ------------------------------------------------
+
+\dontrun{
+# Basic usage
+search_files_query(self, 'file_name*lake')
+
+# Multiple conditions
+search_files_query(self,
+                        'file_name*lake',
+                        'inserted_by=user1@gmail.com',
+                        'inserted_at>1747934722',
+                        'public=TRUE',
+                        output_format='table')
+}
+
 }
 \seealso{
+\code{\link{parse_query_args}} for the query parsing implementation
+
 \code{\link{parse_query_args}} for the query parsing implementation
 }
 \section{Methods}{
@@ -482,7 +523,7 @@ Returns a dataframe containing the catalog record for the inserted file
 \if{latex}{\out{\hypertarget{method-LakehouseClient-search_collections_by_keyword}{}}}
 \subsection{Method \code{search_collections_by_keyword()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_collections_by_keyword(keyword, output_format)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_collections_by_keyword(keyword, output_format = "table")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -503,7 +544,7 @@ A list of collections in the given output_format
 \if{latex}{\out{\hypertarget{method-LakehouseClient-search_files_by_keyword}{}}}
 \subsection{Method \code{search_files_by_keyword()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_files_by_keyword(keyword, output_format)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_files_by_keyword(keyword, output_format = "table")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -567,8 +608,43 @@ search_collections_query(self,
 \if{html}{\out{<a id="method-LakehouseClient-search_files_query"></a>}}
 \if{latex}{\out{\hypertarget{method-LakehouseClient-search_files_query}{}}}
 \subsection{Method \code{search_files_query()}}{
+Search files on the catalogue based on the given filters using query strings.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LakehouseClient$search_files_query(self, ..., output_format = "table")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{self}}{The object reference (for object-oriented style implementation)}
+
+\item{\code{...}}{Query strings containing search terms in KEY[OPERATOR]VALUE format}
+
+\item{\code{output_format}}{A string specifying the output format (default: "dict")}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The search results in the requested format. Returns an empty list if no results found or if error occurs.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+# Basic usage
+search_files_query(self, 'file_name*lake')
+
+# Multiple conditions
+search_files_query(self,
+                        'file_name*lake',
+                        'inserted_by=user1@gmail.com',
+                        'inserted_at>1747934722',
+                        'public=TRUE',
+                        output_format='table')
+}
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }

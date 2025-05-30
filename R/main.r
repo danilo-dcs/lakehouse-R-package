@@ -10,6 +10,7 @@
 #' @import R6
 #' @import stringr
 #' @import dplyr
+#' @import readr
 #' @export
 LakehouseClient <- R6::R6Class("LakehouseClient",
     private = list(
@@ -60,35 +61,55 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             return(parsed_args)
         },
+            
         df_to_tablestring = function(df) {
-            col_widths <- sapply(names(df), function(col) {
-                max(nchar(as.character(df[[col]]), type = "width"), na.rm = TRUE)
-            })
-            col_widths <- pmax(col_widths, nchar(names(df)))
+            df[is.na(df)] <- ""
 
-            header <- paste0("| ", paste(sprintf("%-*s", col_widths, names(df)), collapse = " | "), " |")
-            separator <- paste0("|-", paste(strrep("-", col_widths), collapse = "-|-"), "-|")
+            df_char <- as.data.frame(lapply(df, as.character), stringsAsFactors = FALSE)
 
-            rows <- apply(df, 1, function(row) {
-                paste0("| ", paste(sprintf("%-*s", col_widths, as.character(row)), collapse = " | "), " |")
+            col_widths <- sapply(seq_along(df_char), function(i) {
+                max(nchar(c(names(df_char)[i], df_char[[i]]), type = "width"))
             })
 
-            output <- paste(c(header, separator, rows), collapse = "\n")
+            center_text <- function(text, width) {
+                padding <- width - nchar(text)
+                left <- floor(padding / 2)
+                right <- ceiling(padding / 2)
+                paste0(strrep(" ", left), text, strrep(" ", right))
+            }
 
-            return(output)
+            top_border <- paste("+", paste0(sapply(col_widths, function(w) strrep("-", w + 2)), collapse = "+"), "+\n", sep = "")
+
+            header <- paste("|", paste0(mapply(function(name, w) center_text(name, w), names(df), col_widths), collapse = " | "), "| \n")
+
+            separator <- paste("+", paste0(sapply(col_widths, function(w) strrep("-", w + 2)), collapse = "+"), "+\n", sep = "")
+
+                rows <- apply(df_char, 1, function(row) {
+                    paste0("|", 
+                        paste(mapply(center_text, row, col_widths + 2), 
+                        collapse = "|"), 
+                        "|"
+                    )
+                })
+
+            bottom_border <- paste("+", paste0(sapply(col_widths, function(w) strrep("-", w + 2)), collapse = "+"), "+\n", sep = "")
+
+            return(paste(c("\n", top_border, header, separator, rows, bottom_border), collapse = "\n"))
         },
-        format_output = function(data, output_format) {
+
+
+        format_output = function(dataset, output_format) {
             if (output_format == "json") {
-                return(jsonlite::toJSON(data, pretty = TRUE, auto_unbox = TRUE))
+                return(jsonlite::toJSON(dataset, pretty = TRUE, auto_unbox = TRUE))
             } else if (output_format == "df") {
-                df <- as.data.frame(do.call(rbind, data))
+                df <- as.data.frame(dataset)
                 if ("id" %in% names(df)) {
                 cols <- c("id", setdiff(names(df), "id"))
                 df <- df[, cols]
                 }
                 return(df)
             } else if (output_format == "table") {
-                df <- as.data.frame(do.call(rbind, data))
+                df <- as.data.frame(dataset)
                 if ("id" %in% names(df)) {
                     cols <- c("id", setdiff(names(df), "id"))
                     df <- df[, cols]
@@ -96,7 +117,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 return(df_to_tablestring(df))
             }
 
-            return(data)
+            return(dataset)
         }
     ),
   
@@ -620,14 +641,14 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
              payload = {
            
-        }
+            }
             
             payload <- list(
                 collection_catalog_id=collection_catalog_id,
                 file_name=final_file_name
             )
 
-           optional_params <- list(
+            optional_params <- list(
                 file_category=file_category,
                 file_version=file_version,
                 file_size=file_size,
@@ -897,6 +918,52 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             return(records)
         },
 
+
+        #' 
+        #' @description Search files on the catalogue based on the given filters using query strings.
+        #'
+        #' @param self The object reference (for object-oriented style implementation)
+        #' @param ... Query strings containing search terms in KEY[OPERATOR]VALUE format
+        #' @param output_format A string specifying the output format (default: "dict")
+        #' 
+        #' @section Query String Structure:
+        #' The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+        #' Supported operators:
+        #' \itemize{
+        #'   \item \code{=} - Equal to
+        #'   \item \code{>} - Greater than
+        #'   \item \code{<} - Less than
+        #'   \item \code{>=} - Greater than or equal to
+        #'   \item \code{<=} - Less than or equal to
+        #'   \item \code{*} - Substring match (wildcard)
+        #' }
+        #'
+        #' @section Available Output Formats:
+        #' \describe{
+        #'   \item{\code{"df"}}{Returns results as a data.frame}
+        #'   \item{\code{"json"}}{Returns results as JSON string}
+        #'   \item{\code{"dict"}}{Returns results as named list (default)}
+        #'   \item{\code{"table"}}{Returns results in pretty-printed table format}
+        #' }
+        #' #'
+        #' @return The search results in the requested format. Returns an empty list if no results found or if error occurs.
+        #' 
+        #' @examples
+        #' \dontrun{
+        #' # Basic usage
+        #' search_files_query(self, 'file_name*lake')
+        #' 
+        #' # Multiple conditions
+        #' search_files_query(self,
+        #'                         'file_name*lake',
+        #'                         'inserted_by=user1@gmail.com',
+        #'                         'inserted_at>1747934722',
+        #'                         'public=TRUE',
+        #'                         output_format='table')
+        #' }
+        #'
+        #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
+        #' @export
         search_files_query = function(
             self,
             ...,
