@@ -919,8 +919,11 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 return(list())
             }
 
-            response_content <- httr::content(response, as = "parsed")
-            records <- response_content$records %||% list()
+            respose_text <- httr::content(response, as="text", encoding="UTF-8")
+            
+            response_data <- jsonlite::fromJSON(respose_text)
+
+            records <- response_data$records %||% list()
 
             records <- private$format_output(dataset = records, output_format = output_format)
 
@@ -1021,8 +1024,11 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 return(list())
             }
 
-            response_content <- httr::content(response, as = "parsed")
-            records <- response_content$records %||% list()
+            respose_text <- httr::content(response, as="text", encoding="UTF-8")
+            
+            response_data <- jsonlite::fromJSON(respose_text)
+
+            records <- response_data$records %||% list()
 
             records <- private$format_output(dataset = records, output_format = output_format)
 
