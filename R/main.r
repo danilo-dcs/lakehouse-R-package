@@ -354,7 +354,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return Returns a table-formatted string with the storage buckets in the system
         #' @export
         list_buckets = function(){
-            bucket_list <- public$list_buckets_df()
+            bucket_list <- list_buckets_df()
             table <- private$df_to_tablestring(bucket_list)
             return(table)
         },
@@ -395,7 +395,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return Returns a json-formatted string with the storage buckets in the system
         #' @export
         list_buckets_json = function(){
-            bucket_list <- public$list_buckets_df()
+            bucket_list <- list_buckets_df()
             return(jsonlite::toJSON(df, pretty = TRUE))
         },
 
@@ -408,7 +408,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             sort_by_key = NULL, 
             sort_desc = FALSE
         ){
-            collection_list <- public$list_collections_df(sort_by_key, sort_desc)
+            collection_list <- list_collections_df(sort_by_key, sort_desc)
             table <- private$df_to_tablestring(collection_list)
             return(table)
         },
@@ -462,7 +462,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             sort_by_key = NULL, 
             sort_desc = FALSE
         ){
-            collection_list <- public$list_collections_df(sort_by_key, sort_desc)
+            collection_list <- list_collections_df(sort_by_key, sort_desc)
             json <- jsonlite::toJSON(collection_list, pretty = TRUE)
             return(json)
         },
@@ -483,7 +483,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             sort_by_key = NULL, 
             sort_desc = FALSE
         ) {
-            file_records <- public$list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
+            file_records <- list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
             table <- private$df_to_tablestring(file_records)
             return(table)
         },
@@ -559,7 +559,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             sort_by_key = NULL, 
             sort_desc = FALSE
         ) {
-            file_records <- public$list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
+            file_records <- list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
             json <- jsonlite::toJSON(file_records, pretty = TRUE)
             return(json)
         },
