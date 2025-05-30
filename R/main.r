@@ -972,7 +972,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
         #' @export
         search_files_query = function(
-            self,
             ...,
             output_format="table"
         ){
