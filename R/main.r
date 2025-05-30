@@ -998,8 +998,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 stop("Incorrect filter format!")
             })
 
-            print(payload)
-
             headers <- c(
                 "Authorization" = paste("Bearer", private$access_token)
             )
