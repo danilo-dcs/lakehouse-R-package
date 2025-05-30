@@ -103,7 +103,11 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 return(jsonlite::toJSON(dataset, pretty = TRUE, auto_unbox = TRUE))
             } else if (output_format == "df") {
 
-                df <- do.call(rbind, lapply(dataset, function(x) {
+                rows_list <- lapply(1:length(dataset[[1]]), function(i) {
+                    lapply(dataset, `[[`, i)
+                })
+
+                df <- do.call(rbind, lapply(rows_list, function(x) {
                     x[sapply(x, is.null)] <- NA
                     as.data.frame(x, stringsAsFactors = FALSE)
                 }))
