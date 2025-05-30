@@ -102,19 +102,26 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             if (output_format == "json") {
                 return(jsonlite::toJSON(dataset, pretty = TRUE, auto_unbox = TRUE))
             } else if (output_format == "df") {
-                df <- as.data.frame(dataset)
-                if ("id" %in% names(df)) {
-                cols <- c("id", setdiff(names(df), "id"))
-                df <- df[, cols]
-                }
-                return(df)
-            } else if (output_format == "table") {
-                df <- as.data.frame(dataset)
+
+                df <- do.call(rbind, lapply(dataset, function(x) {
+                    x[sapply(x, is.null)] <- NA
+                    as.data.frame(x, stringsAsFactors = FALSE)
+                }))
+
                 if ("id" %in% names(df)) {
                     cols <- c("id", setdiff(names(df), "id"))
                     df <- df[, cols]
                 }
-                return(df_to_tablestring(df))
+                return(df)
+            } else if (output_format == "table") {
+                
+                df <- as.data.frame(dataset)
+
+                if ("id" %in% names(df)) {
+                    cols <- c("id", setdiff(names(df), "id"))
+                    df <- df[, cols]
+                }
+                return(private$df_to_tablestring(df))
             }
 
             return(dataset)
@@ -354,7 +361,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return Returns a table-formatted string with the storage buckets in the system
         #' @export
         list_buckets = function(){
-            bucket_list <- list_buckets_df()
+            bucket_list <- self$list_buckets_df()
             table <- private$df_to_tablestring(bucket_list)
             return(table)
         },
@@ -395,7 +402,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return Returns a json-formatted string with the storage buckets in the system
         #' @export
         list_buckets_json = function(){
-            bucket_list <- list_buckets_df()
+            bucket_list <- self$list_buckets_df()
             return(jsonlite::toJSON(df, pretty = TRUE))
         },
 
@@ -408,7 +415,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             sort_by_key = NULL, 
             sort_desc = FALSE
         ){
-            collection_list <- list_collections_df(sort_by_key, sort_desc)
+            collection_list <- self$list_collections_df(sort_by_key, sort_desc)
             table <- private$df_to_tablestring(collection_list)
             return(table)
         },
@@ -462,7 +469,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             sort_by_key = NULL, 
             sort_desc = FALSE
         ){
-            collection_list <- list_collections_df(sort_by_key, sort_desc)
+            collection_list <- self$list_collections_df(sort_by_key, sort_desc)
             json <- jsonlite::toJSON(collection_list, pretty = TRUE)
             return(json)
         },
@@ -476,14 +483,14 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
         #' @return A table-formatted string cotaining the file records
         #' @export
-        list_file = function(
+        list_files = function(
             include_raw = TRUE, 
             include_processed = TRUE, 
             include_curated = TRUE, 
             sort_by_key = NULL, 
             sort_desc = FALSE
         ) {
-            file_records <- list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
+            file_records <- self$list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
             table <- private$df_to_tablestring(file_records)
             return(table)
         },
@@ -559,7 +566,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             sort_by_key = NULL, 
             sort_desc = FALSE
         ) {
-            file_records <- list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
+            file_records <- self$list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
             json <- jsonlite::toJSON(file_records, pretty = TRUE)
             return(json)
         },
@@ -774,7 +781,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @export
         search_files_by_keyword = function(keyword, output_format="table") {      
 
-            if (!output_format %in% c("df", "json", "dict")) {
+            if (!output_format %in% c("df", "json", "dict", "table")) {
                 stop("Must specify output format")
             }
 
@@ -913,7 +920,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             response_content <- httr::content(response, as = "parsed")
             records <- response_content$records %||% list()
 
-            records <- self$private$format_output(data = records, output_format = output_format)
+            print(records)
+
+            records <- private$format_output(dataset = records, output_format = output_format)
 
             return(records)
         },
@@ -1017,7 +1026,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             response_content <- httr::content(response, as = "parsed")
             records <- response_content$records %||% list()
 
-            records <- self$private$format_output(data = records, output_format = output_format)
+            print(records)
+
+            records <- private$format_output(dataset = records, output_format = output_format)
 
             return(records)
         }
