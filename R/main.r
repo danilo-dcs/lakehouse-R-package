@@ -385,7 +385,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 config = httr::config(ssl_verifypeer = 0)
             )
             
-            respose_text <- httr::content(response, as="text", encoding="UTF-8")
+            respose_text <- httr::content(response, as = "text", encoding = "UTF-8")
 
             response_data <- jsonlite::fromJSON(respose_text)
 
@@ -395,9 +395,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             print("RESPONSE")
             cat(response_data)
-             print("==========")
+            print("==========")
 
-            buckets_df <- as.data.frame(response_data$bucket_list)
+            buckets_df <- private$format_output(response_data$bucket_list, output_format = "df")
             
             if (nrow(buckets_df) > 0) {
                 buckets_df <- buckets_df[order(buckets_df$bucket_name), , drop = FALSE]
@@ -469,8 +469,10 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             if (!is.null(sort_by_key) && sort_by_key %in% names(records)) {
                 records <- records[order(records[[sort_by_key]], decreasing = sort_desc), ]
             }
+
+
             
-            return(as.data.frame(records))
+            return(private$format_output(records, output_format = "df"))
         },
 
         list_collections_json = function(
@@ -555,7 +557,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             
             filtered_data <- records[records$processing_level %in% filter_options, ]
             
-            return(as.data.frame(filtered_data))
+            return(private$format_output(filtered_data, output_format = "df"))
         },
 
 
