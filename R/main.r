@@ -372,6 +372,8 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             print("EISH")
             print("=========")
+            print(bucket_list)
+            print("=========")
 
             table <- private$df_to_tablestring(bucket_list)
 
