@@ -64,11 +64,11 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             
         df_to_tablestring = function(df) {
 
-            if (is.data.frame(x)) {
-                if (nrow(x) == 0 || ncol(x) == 0) {
+            if (is.data.frame(df)) {
+                if (nrow(df) == 0 || ncol(df) == 0) {
                     return("No items available!")
                 }
-            } else if (is.list(x) && length(x) == 0) {
+            } else if (is.list(df) && length(df) == 0) {
                 return("No items available!")
             }
 
