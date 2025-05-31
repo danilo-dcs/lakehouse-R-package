@@ -63,6 +63,15 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         },
             
         df_to_tablestring = function(df) {
+
+            if (is.data.frame(x)) {
+                if (nrow(x) == 0 || ncol(x) == 0) {
+                    return("No items available!")
+                }
+            } else if (is.list(x) && length(x) == 0) {
+                return("No items available!")
+            }
+
             df[is.na(df)] <- ""
 
             df_char <- as.data.frame(lapply(df, as.character), stringsAsFactors = FALSE)
