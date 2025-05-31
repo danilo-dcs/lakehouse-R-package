@@ -365,8 +365,16 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return Returns a table-formatted string with the storage buckets in the system
         #' @export
         list_buckets = function(){
+            print("Entrouu")
+            print("=========")
+
             bucket_list <- self$list_buckets_df()
+
+            print("EISH")
+            print("=========")
+
             table <- private$df_to_tablestring(bucket_list)
+
             return(table)
         },
 
