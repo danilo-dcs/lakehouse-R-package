@@ -392,31 +392,38 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #'
         #' @return Returns an R dataframe with the storage buckets in the system
         #' @export
-        list_buckets_df = function() {
-            # Lists all the available storage buckets in the system where data can be uploaded
-            
+        list_buckets_df = function() {            
             headers <- c("Authorization" = paste("Bearer", private$access_token))
             
             url <- paste0(private$lakehouse_url, "/storage/bucket-list")
             
             response <- httr::POST(
-                url, httr::add_headers(.headers = headers), 
+                url = url, 
+                httr::add_headers(.headers = headers), 
                 config = httr::config(ssl_verifypeer = 0)
             )
+
+            print("RESPONSE")
+            print(response)
+            print("==========")
             
             respose_text <- httr::content(response, as = "text", encoding = "UTF-8")
 
             response_data <- jsonlite::fromJSON(respose_text)
 
+            print("PARSED RESPONSE")
+            print(response_data)
+            print("==========")
+
             if (!is.null(response_data$error) || length(response_data$bucket_list) == 0) {
                 return(data.frame())
             }
 
-            print("RESPONSE")
-            print(response_data)
-            print("==========")
-
             buckets_df <- private$format_output(response_data$bucket_list, output_format = "df")
+
+            print("PARSED RESPONSE BUCKET")
+            print(buckets_df)
+            print("==========")
             
             if (nrow(buckets_df) > 0) {
                 buckets_df <- buckets_df[order(buckets_df$bucket_name), , drop = FALSE]
@@ -461,8 +468,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             )
             
             response <- httr::GET(
-                url = paste0(private$lakehouse_url, 
-                "/catalog/collections/all"), 
+                url = paste0(private$lakehouse_url, "/catalog/collections/all"), 
                 httr::add_headers(.headers=headers), 
                 config = httr::config(ssl_verifypeer = 0)
             )
