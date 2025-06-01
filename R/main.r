@@ -675,10 +675,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             }
 
             payload <- payload[!sapply(payload, is.null)]
-
-            print("")
-            print(payload)
-            print("")
             
             headers <- c("Authorization" = paste("Bearer", private$access_token))
             
@@ -690,10 +686,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
                 config = httr::config(ssl_verifypeer = 0)
             )
-
-            print("")
-            print(response)
-            print("")
 
             if (httr::status_code(response) != 200) {
                 stop("Unable to get upload URL")
