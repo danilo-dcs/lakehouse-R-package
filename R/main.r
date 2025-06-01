@@ -608,10 +608,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             public = FALSE,
             processing_level = "raw"
         ) {
-            if (is.null(bucket_name) && is.null(namenode_address)) {
-                stop("Unable to find the storage location. namenode_address or bucket_name must be specified")
-            }
-
             df_file_path <- paste0(getwd(), "/", df_name, ".csv") 
             write.csv(df, file = df_file_path, row.names = FALSE) 
 
