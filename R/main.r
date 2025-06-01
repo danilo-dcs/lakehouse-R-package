@@ -416,7 +416,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @export
         list_buckets_json = function(){
             bucket_list <- self$list_buckets_df()
-            return(jsonlite::toJSON(df, pretty = TRUE))
+            return(jsonlite::toJSON(bucket_list, pretty = TRUE))
         },
 
         #' List collections catalog records
