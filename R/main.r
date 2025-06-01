@@ -374,16 +374,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return Returns a table-formatted string with the storage buckets in the system
         #' @export
         list_buckets = function(){
-            print("Entrouu")
-            print("=========")
-
             bucket_list <- self$list_buckets_df()
-
-            print("EISH")
-            print("=========")
-            print(bucket_list)
-            print("=========")
-
             table <- private$df_to_tablestring(bucket_list)
 
             return(table)
@@ -397,34 +388,22 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             
             url <- paste0(private$lakehouse_url, "/storage/bucket-list")
             
-            response <- httr::POST(
+            response <- httr::GET(
                 url = url, 
                 httr::add_headers(.headers = headers), 
                 config = httr::config(ssl_verifypeer = 0)
             )
 
-            print("RESPONSE")
-            print(response)
-            print("==========")
-            
             respose_text <- httr::content(response, as = "text", encoding = "UTF-8")
 
             response_data <- jsonlite::fromJSON(respose_text)
-
-            print("PARSED RESPONSE")
-            print(response_data)
-            print("==========")
 
             if (!is.null(response_data$error) || length(response_data$bucket_list) == 0) {
                 return(data.frame())
             }
 
             buckets_df <- private$format_output(response_data$bucket_list, output_format = "df")
-
-            print("PARSED RESPONSE BUCKET")
-            print(buckets_df)
-            print("==========")
-            
+  
             if (nrow(buckets_df) > 0) {
                 buckets_df <- buckets_df[order(buckets_df$bucket_name), , drop = FALSE]
             }
