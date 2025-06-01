@@ -656,10 +656,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             public=FALSE,
             processing_level = NULL
         ) {  
-            if (is.null(bucket_name) && is.null(namenode_address)) {
-                stop("Unable to find the storage location. namenode_address or bucket_name must be specified")
-            }
-            
             file_size <- file.info(local_file_path)$size
             
             payload <- list(
@@ -684,7 +680,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             payload <- payload[!sapply(payload, is.null)]
 
+            print("")
             print(payload)
+            print("")
             
             headers <- c("Authorization" = paste("Bearer", private$access_token))
             
@@ -697,7 +695,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 config = httr::config(ssl_verifypeer = 0)
             )
 
+            print("")
             print(response)
+            print("")
 
             if (httr::status_code(response) != 200) {
                 stop("Unable to get upload URL")
