@@ -298,13 +298,15 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 }
             }
 
+            payload <- payload[!sapply(payload, is.null)]
+
             headers <- c(
                 "Authorization" = paste("Bearer", private$access_token)
             )
 
             url <- paste0(private$lakehouse_url, "/storage/collections/create")
             
-            response <- httr::POST(url, body = jsonlite::toJSON(payload, auto_unbox = TRUE, null = "skip"), encode = "json", httr::add_headers(.headers = headers), config = httr::config(ssl_verifypeer = 0))
+            response <- httr::POST(url, body = jsonlite::toJSON(payload, auto_unbox = TRUE), encode = "json", httr::add_headers(.headers = headers), config = httr::config(ssl_verifypeer = 0))
 
             if (httr::status_code(response) != 200) {
                 stop("Error: Failed to add collection. HTTP status: ", httr::status_code(response))
