@@ -661,10 +661,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             }
             
             file_size <- file.info(local_file_path)$size
-
-             payload = {
-           
-            }
             
             payload <- list(
                 collection_catalog_id=collection_catalog_id,
@@ -685,6 +681,10 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                     payload[[name]] <- optional_params[[name]]
                 }
             }
+
+            payload <- payload[!sapply(payload, is.null)]
+
+            print(payload)
             
             headers <- c("Authorization" = paste("Bearer", private$access_token))
             
@@ -696,6 +696,8 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
                 config = httr::config(ssl_verifypeer = 0)
             )
+
+            print(response)
 
             if (httr::status_code(response) != 200) {
                 stop("Unable to get upload URL")
