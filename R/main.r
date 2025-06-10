@@ -110,7 +110,7 @@ client <- function(url) {
             access_token <<- response_content$access_token
             access_token_type <<- response_content$token_type
             user_email <<- email
-            
+
             return("Session Authenticated!")
         } else {
             return("Unable to authenticate!")
@@ -734,7 +734,7 @@ client <- function(url) {
     #'
     #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
     #' @export
-__    search_collections_query <- function(
+    search_collections_query <- function(
         ...
     ){
         query_args <- list(...)
@@ -832,7 +832,7 @@ __    search_collections_query <- function(
     #'
     #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
     #' @export
-__    search_files_query <- function(
+    search_files_query <- function(
         ...
     ){
         query_args <- list(...)
