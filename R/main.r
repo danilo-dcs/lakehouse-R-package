@@ -61,83 +61,22 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             return(parsed_args)
         },
-            
-        df_to_tablestring = function(df) {
 
-            if (is.data.frame(df)) {
-                if (nrow(df) == 0 || ncol(df) == 0) {
-                    return("No items available!")
-                }
-            } else if (is.list(df) && length(df) == 0) {
-                return("No items available!")
-            }
-
-            df[is.na(df)] <- ""
-
-            df_char <- as.data.frame(lapply(df, as.character), stringsAsFactors = FALSE)
-
-            col_widths <- sapply(seq_along(df_char), function(i) {
-                max(nchar(c(names(df_char)[i], df_char[[i]]), type = "width"))
+        format_output_dataframe = function(dataset) {
+            rows_list <- lapply(seq_along(dataset[[1]]), function(i) {
+                lapply(dataset, `[[`, i)
             })
 
-            center_text <- function(text, width) {
-                padding <- width - nchar(text)
-                left <- floor(padding / 2)
-                right <- ceiling(padding / 2)
-                paste0(strrep(" ", left), text, strrep(" ", right))
+            df <- do.call(rbind, lapply(rows_list, function(x) {
+                x[sapply(x, is.null)] <- NA
+                as.data.frame(x, stringsAsFactors = FALSE)
+            }))
+
+            if ("id" %in% names(df)) {
+                cols <- c("id", setdiff(names(df), "id"))
+                df <- df[, cols]
             }
-
-            top_border <- paste("+", paste0(sapply(col_widths, function(w) strrep("-", w + 2)), collapse = "+"), "+\n", sep = "")
-
-            header <- paste("|", paste0(mapply(function(name, w) center_text(name, w), names(df), col_widths), collapse = " | "), "| \n")
-
-            separator <- paste("+", paste0(sapply(col_widths, function(w) strrep("-", w + 2)), collapse = "+"), "+\n", sep = "")
-
-                rows <- apply(df_char, 1, function(row) {
-                    paste0("|", 
-                        paste(mapply(center_text, row, col_widths + 2), 
-                        collapse = "|"), 
-                        "|"
-                    )
-                })
-
-            bottom_border <- paste("+", paste0(sapply(col_widths, function(w) strrep("-", w + 2)), collapse = "+"), "+\n", sep = "")
-
-            return(paste(c("\n", top_border, header, separator, rows, bottom_border), collapse = "\n"))
-        },
-
-
-        format_output = function(dataset, output_format) {
-            if (output_format == "json") {
-                return(jsonlite::toJSON(dataset, pretty = TRUE, auto_unbox = TRUE))
-            } else if (output_format == "df") {
-
-                rows_list <- lapply(seq_along(dataset[[1]]), function(i) {
-                    lapply(dataset, `[[`, i)
-                })
-
-                df <- do.call(rbind, lapply(rows_list, function(x) {
-                    x[sapply(x, is.null)] <- NA
-                    as.data.frame(x, stringsAsFactors = FALSE)
-                }))
-
-                if ("id" %in% names(df)) {
-                    cols <- c("id", setdiff(names(df), "id"))
-                    df <- df[, cols]
-                }
-                return(df)
-            } else if (output_format == "table") {
-                
-                df <- as.data.frame(dataset)
-
-                if ("id" %in% names(df)) {
-                    cols <- c("id", setdiff(names(df), "id"))
-                    df <- df[, cols]
-                }
-                return(private$df_to_tablestring(df))
-            }
-
-            return(dataset)
+            return(df)
         }
     ),
   
@@ -376,19 +315,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         },
 
         #'
-        #' @return Returns a table-formatted string with the storage buckets in the system
-        #' @export
-        list_buckets = function(){
-            bucket_list <- self$list_buckets_df()
-            table <- private$df_to_tablestring(bucket_list)
-
-            return(table)
-        },
-
-        #'
         #' @return Returns an R dataframe with the storage buckets in the system
         #' @export
-        list_buckets_df = function() {            
+        list_buckets = function() {            
             headers <- c("Authorization" = paste("Bearer", private$access_token))
             
             url <- paste0(private$lakehouse_url, "/storage/bucket-list")
@@ -407,7 +336,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 return(data.frame())
             }
 
-            buckets_df <- private$format_output(response_data$bucket_list, output_format = "df")
+            buckets_df <- private$format_output_dataframe(response_data$bucket_list, output_format = "df")
   
             if (nrow(buckets_df) > 0) {
                 buckets_df <- buckets_df[order(buckets_df$bucket_name), , drop = FALSE]
@@ -430,20 +359,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @return A R dataframe cotaining the collection records
         #' @export
         list_collections = function(
-            sort_by_key = NULL, 
-            sort_desc = FALSE
-        ){
-            collection_list <- self$list_collections_df(sort_by_key, sort_desc)
-            table <- private$df_to_tablestring(collection_list)
-            return(table)
-        },
-
-        #' List collections catalog records
-        #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
-        #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
-        #' @return A R dataframe cotaining the collection records
-        #' @export
-        list_collections_df = function(
             sort_by_key = NULL, 
             sort_desc = FALSE
         ) {     
@@ -481,7 +396,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
 
             
-            return(private$format_output(records, output_format = "df"))
+            return(private$format_output_dataframe(records, output_format = "df"))
         },
 
         list_collections_json = function(
@@ -493,27 +408,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             return(json)
         },
 
-
-        #' List files catalog records
-        #' @param include_raw A Boolean value indicating if the raw files should be included in the response
-        #' @param include_processed A Boolean value indicating if the processed files should be included in the response
-        #' @param include_curated A Boolean value indicating if the curated files should be included in the response
-        #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
-        #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
-        #' @return A table-formatted string cotaining the file records
-        #' @export
-        list_files = function(
-            include_raw = TRUE, 
-            include_processed = TRUE, 
-            include_curated = TRUE, 
-            sort_by_key = NULL, 
-            sort_desc = FALSE
-        ) {
-            file_records <- self$list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)
-            table <- private$df_to_tablestring(file_records)
-            return(table)
-        },
-
         #' List files catalog records
         #' @param include_raw A Boolean value indicating if the raw files should be included in the response
         #' @param include_processed A Boolean value indicating if the processed files should be included in the response
@@ -522,7 +416,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
         #' @return A R dataframe cotaining the file records
         #' @export
-        list_files_df = function(
+        list_files = function(
             include_raw = TRUE, 
             include_processed = TRUE, 
             include_curated = TRUE, 
@@ -566,7 +460,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             
             filtered_data <- records[records$processing_level %in% filter_options, ]
             
-            return(private$format_output(filtered_data, output_format = "df"))
+            return(private$format_output_dataframe(filtered_data, output_format = "df"))
         },
 
 
@@ -737,15 +631,9 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
         #' Search for collection names using a given keyword
         #' @param keyword A string containing the keyword to search for, the search will match the collection names to the keyword
-        #' @param output_format A string containing one of the following options ["df", "json", "dict"]
         #' @return A list of collections in the given output_format
         #' @export
-        search_collections_by_keyword = function(keyword, output_format="table") {      
-
-            if (!output_format %in% c("df", "json", "dict", "table")) {
-                stop("Must specify output format")
-            }
-
+        search_collections_by_keyword = function(keyword) {      
             filters <- list(
                 list(
                     property_name = "collection_name",
@@ -777,21 +665,16 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             records <- response_data$records %||% list()
             
-            records <- private$format_output(data = records, output_format = output_format)
+            records <- private$format_output_dataframe(dataset = records)
             
             return(records)
         },
 
         #' Search for file names using a given keyword
         #' @param keyword A string containing the keyword to search for, the search will match the file names to the keyword
-        #' @param output_format A string containing one of the following options ["df", "json", "dict"]
         #' @return A list of files in the given output_format
         #' @export
-        search_files_by_keyword = function(keyword, output_format="table") {      
-
-            if (!output_format %in% c("df", "json", "dict", "table")) {
-                stop("Must specify output format")
-            }
+        search_files_by_keyword = function(keyword) {      
 
             filters <- list(
                 list(
@@ -824,7 +707,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             records <- response_data$records %||% list()
             
-            records <- private$format_output(data = records, output_format = output_format)
+            records <- private$format_output_dataframe(dataset = records)
             
             return(records)
         },
@@ -834,8 +717,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @description Search files on the catalogue based on the given filters using query strings.
         #'
         #' @param ... Query strings containing search terms in KEY[OPERATOR]VALUE format
-        #' @param output_format A string specifying the output format (default: "dict")
-        #' 
         #' @section Query String Structure:
         #' The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
         #' Supported operators:
@@ -875,13 +756,8 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
         #' @export
         search_collections_query = function(
-            ...,
-            output_format="table"
+            ...
         ){
-             if (!output_format %in% c("df", "json", "dict", "table")) {
-                stop("Must specify output format")
-            }
-
             query_args <- list(...)
 
             parsed_args <- tryCatch({
@@ -929,7 +805,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             records <- response_data$records %||% list()
 
-            records <- private$format_output(dataset = records, output_format = output_format)
+            records <- private$format_output_dataframe(dataset = records)
 
             return(records)
         },
@@ -939,8 +815,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @description Search files on the catalogue based on the given filters using query strings.
         #'
         #' @param ... Query strings containing search terms in KEY[OPERATOR]VALUE format
-        #' @param output_format A string specifying the output format (default: "dict")
-        #' 
         #' @section Query String Structure:
         #' The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
         #' Supported operators:
@@ -980,13 +854,8 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         #' @seealso \code{\link{parse_query_args}} for the query parsing implementation
         #' @export
         search_files_query = function(
-            ...,
-            output_format="table"
+            ...
         ){
-            if (!output_format %in% c("df", "json", "dict", "table")) {
-                stop("Must specify output format")
-            }
-
             query_args <- list(...)
 
             parsed_args <- tryCatch({
@@ -1034,7 +903,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
 
             records <- response_data$records %||% list()
 
-            records <- private$format_output(dataset = records, output_format = output_format)
+            records <- private$format_output_dataframe(dataset = records)
 
             return(records)
         }
