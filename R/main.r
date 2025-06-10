@@ -17,12 +17,12 @@ client <- function(url) {
     domain <- gsub("^https?://", "", url)
     lakehouse_url <- paste0("http://", domain)
     
-    user_id = NULL
-    user_role = NULL
-    user_email = NULL
-    access_token = NULL
-    access_token_type = NULL
-    file_load_path = "./" 
+    user_id <- NULL
+    user_role <- NULL
+    user_email<- NULL
+    access_token <- NULL
+    access_token_type <- NULL
+    file_load_path <- "./" 
 
     format_size__ <- function(bytes) {
         kb <- bytes / 1024
