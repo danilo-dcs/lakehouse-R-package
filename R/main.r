@@ -12,6 +12,7 @@
 #' 
 #' This function initializes the lakehouse client and returns a list of funtions that can be used to interact with the lakehouse system
 #' @param url String containing the lakehouse-api url
+#' @export
 client <- function(url) {
 
     domain <- gsub("^https?://", "", url)
@@ -184,7 +185,7 @@ client <- function(url) {
     #' @param collection_description An optional string containing additional description for this collection
     #' @param public Optional boolean value indicating whether the collection will be public (TRUE or FALSE)
     #' @param secret Optional boolean value indicating whether the collection will be secret (TRUE or FALSE)
-    #' @return A dataset containing the collection's information in the catalog 
+    #' @return A dataset containing the collection's information in the catalog
     #' @export
     create_collection <- function(
         storage_type,
