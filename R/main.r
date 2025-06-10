@@ -886,4 +886,26 @@ client <- function(url) {
 
         return(records)
     }
+
+
+    return(
+        list(
+            auth,
+            create_collection,
+            download_file,
+            get_dataframe,
+            list_collections,
+            list_collections_json,
+            list_files,
+            list_files_json,
+            list_buckets,
+            list_buckets_json,
+            upload_dataframe,   
+            upload_file,
+            search_collections_by_keyword,
+            search_collections_query,
+            search_files_by_keyword,
+            search_files_query,
+        )
+    )
 }

@@ -49,18 +49,12 @@ _Alternativelly, you can also set up an R environment on Google Colab or Jupyter
 ### Listing Collections, files and buckets
 
 - [client$list_collections()](#clientlist_collections)
-- [client$list_collections_dict()](#clientlist_collections_dict)
-- [client$list_collections_df()](#clientlist_collections_df)
 - [client$list_collections_json()](#clientlist_collections_json)<br><br>
 
 - [client$list_files()](#clientlist_files)
-- [client$list_files_dict()](#clientlist_files_dict)
-- [client$list_files_df()](#clientlist_files_df)
 - [client$list_files_json()](#clientlist_files_json)<br><br>
 
 - [client$list_buckets()](#clientlist_buckets)
-- [client$list_buckets_dict()](#clientlist_buckets_dict)
-- [client$list_buckets_df()](#clientlist_buckets_df)
 - [client$list_buckets_json()](#clientlist_buckets_json)<br><br>
 
 - [client$upload_dataframe()](#clientupload_dataframe)
@@ -150,36 +144,6 @@ Returns a table-formatted string with the collections records. cat() command is 
 
 ---
 
-### `client$list_collections_dict("sort_by_key", sort_desc = FALSE)` <a name="clientlist_collections_dict">:</a>
-
-**Description**
-List all available collections.
-
-**Arguments**
-
-- sort_by_key (Optional): String containing the key parameter to be the sorting reference, default is inserted_at (date of insertion)
-- sort_desc (Optional): Boolean value indicating TRUE or FALSE for sorting descendently
-
-**Returns**
-Returns a list of python dictionaries with the collections records
-
----
-
-### `client$list_collections_df("sort_by_key", sort_desc = FALSE)` <a name="clientlist_collections_df">:</a>
-
-**Description**
-List all available collections.
-
-**Arguments**
-
-- sort_by_key (Optional): String containing the key parameter to be the sorting reference, default is inserted_at (date of insertion)
-- sort_desc (Optional): Boolean value indicating TRUE or FALSE for sorting descendently
-
-**Returns**
-Returns a pandas dataframe with the collections records
-
----
-
 ### `client$list_collections_json("sort_by_key", sort_desc = FALSE)` <a name="clientlist_collections_json">:</a>
 
 **Description**
@@ -216,48 +180,6 @@ Useful for exploring available resources before querying or downloading.
 
 ---
 
-### `client$list_files_dict(include_raw = TRUE, include_processed = TRUE, include_curated = TRUE, "sort_by_key", sort_desc = FALSE)` <a name="clientlist_files_dict">:</a>
-
-List files in a given collection or bucket.  
-**Description**:
-
-Useful for exploring available resources before querying or downloading.
-
-**Arguments**
-
-- include_raw (Optional): Boolead flag indicating if results will whether include raw files
-- include_processed (Optional): Boolead flag indicating if results will whether include processed files
-- curated (Optional): Boolead flag indicating if results will whether include curated files
-- sort_by_key (Optional): String containing the key parameter to be the sorting reference, default is inserted_at (date of insertion)
-- sort_desc (Optional): Boolean value indicating TRUE or FALSE for sorting descendently
-
-**Returns:**
-
-- It returns a list of python dictionaries with the files in the catalog
-
----
-
-### `client$list_files_df(include_raw = TRUE, include_processed = TRUE, include_curated = TRUE, "sort_by_key", sort_desc = FALSE)` <a name="clientlist_files_df">:</a>
-
-List files in a given collection or bucket.  
-**Description**:
-
-Useful for exploring available resources before querying or downloading.
-
-**Arguments**
-
-- include_raw (Optional): Boolead flag indicating if results will whether include raw files
-- include_processed (Optional): Boolead flag indicating if results will whether include processed files
-- curated (Optional): Boolead flag indicating if results will whether include curated files
-- sort_by_key (Optional): String containing the key parameter to be the sorting reference, default is inserted_at (date of insertion)
-- sort_desc (Optional): Boolean value indicating TRUE or FALSE for sorting descendently
-
-**Returns:**
-
-- It returns a pandas dataframe with the files in the catalog
-
----
-
 ### `client$list_files_json()` <a name="clientlist_files_json">:</a>
 
 List files in a given collection or bucket.  
@@ -288,30 +210,6 @@ Buckets represent logical data partitions or storage spaces.
 **Returns:**
 
 - It returns a table-formatted string containing all the storage buckets in the system, cat() command is recommended to visualize the formatted table
-
----
-
-### `client$list_buckets_dict()` <a name="clientlist_buckets_dict">:</a>
-
-List all buckets accessible by the user.  
-**Description**:
-Buckets represent logical data partitions or storage spaces.
-
-**Returns:**
-
-- It returns a list of pyton dicts containing all the storage buckets in the system
-
----
-
-### `client$list_buckets_df()` <a name="clientlist_buckets_df">:</a>
-
-List all buckets accessible by the user.  
-**Description**:
-Buckets represent logical data partitions or storage spaces.
-
-**Returns:**
-
-- It returns a pandas dataframe containing all the storage buckets in the system
 
 ---
 
