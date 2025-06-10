@@ -25,6 +25,9 @@ To use the lakehouse functionalities create an instance of LakehouseClient by ru
 client <- LakehouseClient$new("lakehouse_app_url")
 ```
 
+_If you are facing issues to install the LakehouseClient library and it's dependencies on RStudio, please try to create a new empty RStudio project and the import the LakehouseClient library_.
+_Alternativelly, you can also set up an R environment on Google Colab or Jupyter_.
+
 ## 📚 Function Index
 
 ### Authentication
@@ -73,14 +76,14 @@ client <- LakehouseClient$new("lakehouse_app_url")
 
 ## 🔧 Function Details
 
-### `client.auth(email, password)` <a name="clientauth">:</a>
+### `client$auth("email", "password")` <a name="clientauth">:</a>
 
 **Description:**  
 Authenticates the user based on login details. It returns the authentication token.
 
 ---
 
-### `client.create_collection(storage_type, collection_name, namenode_address, bucket_name, collection_description, public, secret)` <a name="clientcreate_collection">:</a>
+### `client$create_collection("storage_type", "collection_name", "bucket_name", "collection_description", public = TRUE, secret = FALSE)` <a name="clientcreate_collection">:</a>
 
 **Description:**  
 Creates a new collection of files. Returns the collection's name.
@@ -89,8 +92,7 @@ Creates a new collection of files. Returns the collection's name.
 
 - `storage_type`: storage type for the collection ('gcs', 's3', 'hdfs')
 - `collection_name`: name for the new collection
-- `namenode_address [Optional]`: required for HDFS
-- `bucket_name [Optional]`: required for GCP/S3
+- `bucket_name`: required for GCP/S3/HDFS
 - `collection_description [Optional]`: text description
 - `public [Optional]`: marks the collection as public
 - `secret [Optional]`: marks the collection as secret
@@ -101,7 +103,7 @@ Creates a new collection of files. Returns the collection's name.
 
 ---
 
-### `client.download_file(catalog_file_id, output_file_dir)` <a name="clientdownload_file">:</a>
+### `client$download_file("catalog_file_id", "output_file_dir")` <a name="clientdownload_file">:</a>
 
 **Description:**  
 Downloads a file from the lakehouse catalog using its catalog ID. Returns the local path where the file was saved.
@@ -117,7 +119,7 @@ Downloads a file from the lakehouse catalog using its catalog ID. Returns the lo
 
 ---
 
-### `client.get_dataframe(catalogue_file_id)` <a name="clientget_dataframe">:</a>
+### `client$get_dataframe("catalogue_file_id")` <a name="clientget_dataframe">:</a>
 
 **Description:**  
 Get a file as a dataframe.  
@@ -133,7 +135,7 @@ The file must be CSV, XLSX, TSV, JSON, MD, HTML, TEX, or PARQUET. Only works if 
 
 ---
 
-### `client.list_collections(sort_by_key, sort_desc)` <a name="clientlist_collections">:</a>
+### `client$list_collections("sort_by_key", sort_desc = FALSE)` <a name="clientlist_collections">:</a>
 
 **Description**
 List all available collections.
@@ -148,7 +150,7 @@ Returns a table-formatted string with the collections records. cat() command is 
 
 ---
 
-### `client.list_collections_dict(sort_by_key, sort_desc)` <a name="clientlist_collections_dict">:</a>
+### `client$list_collections_dict("sort_by_key", sort_desc = FALSE)` <a name="clientlist_collections_dict">:</a>
 
 **Description**
 List all available collections.
@@ -163,7 +165,7 @@ Returns a list of python dictionaries with the collections records
 
 ---
 
-### `client.list_collections_df(sort_by_key, sort_desc)` <a name="clientlist_collections_df">:</a>
+### `client$list_collections_df("sort_by_key", sort_desc = FALSE)` <a name="clientlist_collections_df">:</a>
 
 **Description**
 List all available collections.
@@ -178,7 +180,7 @@ Returns a pandas dataframe with the collections records
 
 ---
 
-### `client.list_collections_json(sort_by_key, sort_desc)` <a name="clientlist_collections_json">:</a>
+### `client$list_collections_json("sort_by_key", sort_desc = FALSE)` <a name="clientlist_collections_json">:</a>
 
 **Description**
 List all available collections.
@@ -193,7 +195,7 @@ Returns a json-formatted string with the collections records
 
 ---
 
-### `client.list_files(include_raw, include_processed, include_curated, sort_by_key, sort_desc)` <a name="clientlist_files">:</a>
+### `client$list_files(include_raw = TRUE, include_processed = TRUE, include_curated = TRUE, "sort_by_key", sort_desc = FALSE)` <a name="clientlist_files">:</a>
 
 List files in a given collection or bucket.  
 **Description**:
@@ -214,7 +216,7 @@ Useful for exploring available resources before querying or downloading.
 
 ---
 
-### `client.list_files_dict(include_raw, include_processed, include_curated, sort_by_key, sort_desc)` <a name="clientlist_files_dict">:</a>
+### `client$list_files_dict(include_raw = TRUE, include_processed = TRUE, include_curated = TRUE, "sort_by_key", sort_desc = FALSE)` <a name="clientlist_files_dict">:</a>
 
 List files in a given collection or bucket.  
 **Description**:
@@ -235,7 +237,7 @@ Useful for exploring available resources before querying or downloading.
 
 ---
 
-### `client.list_files_df(include_raw, include_processed, include_curated, sort_by_key, sort_desc)` <a name="clientlist_files_df">:</a>
+### `client$list_files_df(include_raw = TRUE, include_processed = TRUE, include_curated = TRUE, "sort_by_key", sort_desc = FALSE)` <a name="clientlist_files_df">:</a>
 
 List files in a given collection or bucket.  
 **Description**:
@@ -256,7 +258,7 @@ Useful for exploring available resources before querying or downloading.
 
 ---
 
-### `client.list_files_json()` <a name="clientlist_files_json">:</a>
+### `client$list_files_json()` <a name="clientlist_files_json">:</a>
 
 List files in a given collection or bucket.  
 **Description**:
@@ -277,7 +279,7 @@ Useful for exploring available resources before querying or downloading.
 
 ---
 
-### `client.list_buckets()` <a name="clientlist_buckets">:</a>
+### `client$list_buckets()` <a name="clientlist_buckets">:</a>
 
 List all buckets accessible by the user.  
 **Description**:
@@ -289,7 +291,7 @@ Buckets represent logical data partitions or storage spaces.
 
 ---
 
-### `client.list_buckets_dict()` <a name="clientlist_buckets_dict">:</a>
+### `client$list_buckets_dict()` <a name="clientlist_buckets_dict">:</a>
 
 List all buckets accessible by the user.  
 **Description**:
@@ -301,7 +303,7 @@ Buckets represent logical data partitions or storage spaces.
 
 ---
 
-### `client.list_buckets_df()` <a name="clientlist_buckets_df">:</a>
+### `client$list_buckets_df()` <a name="clientlist_buckets_df">:</a>
 
 List all buckets accessible by the user.  
 **Description**:
@@ -313,7 +315,7 @@ Buckets represent logical data partitions or storage spaces.
 
 ---
 
-### `client.list_buckets_json()` <a name="clientlist_buckets_json">:</a>
+### `client$list_buckets_json()` <a name="clientlist_buckets_json">:</a>
 
 List all buckets accessible by the user.  
 **Description**:
@@ -325,7 +327,7 @@ Buckets represent logical data partitions or storage spaces.
 
 ---
 
-### `client.upload_dataframe(df_name, collection_catalog_id, file_description, dataframe_version, public)` <a name="clientupload_dataframe">:</a>
+### `client$upload_dataframe("df_name", "collection_catalog_id", "file_description", version = 1, public = TRUE)` <a name="clientupload_dataframe">:</a>
 
 Upload a pandas DataFrame to the lakehouse.
 
@@ -359,7 +361,7 @@ Function Arguments\*\*:
 
 ---
 
-### `client.upload_file(local_file_path, final_file_name, collection_catalog_id, file_category, file_description, file_version, file_size, public, processing_level)` <a name="clientupload_file">:</a>
+### `client$upload_file("local_file_path", "final_file_name", "collection_catalog_id", "file_category", "file_description", file_version = 1, public = TRUE, "processing_level")` <a name="clientupload_file">:</a>
 
 **Description:**  
 Set up a new file to be uploaded from local storage. It returns the catalog item for the new file uploaded.  
@@ -371,7 +373,6 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 - `file_category`: the file class must indicate if the file is 'structured' or 'unstructured'; default is 'unstructured'
 - `file_description [Optional]`: Additional description for the file
 - `file_version [Optional, default 1]`: Version number for version control
-- `file_size [Optional, default 0]`: The file size; default is calculated automatically
 - `public [Optional, default False]`: If public, the file is visible to all users
 - `processing_level [Optional]`: The processing level ("raw", "processed", "curated")
 
@@ -381,7 +382,7 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 ---
 
-### `client$search_collections_by_keyword(keyword, output_format)` <a name="clientsearch_collections_by_keyword">:</a>
+### `client$search_collections_by_keyword("keyword", "output_format")` <a name="clientsearch_collections_by_keyword">:</a>
 
 **Description**: Search the collections in the catalogue by keyword. Enables discovery of collections of datasets based on a specified keyword
 
@@ -396,7 +397,7 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 ---
 
-### `client$search_collections_query(..., output_format)` <a name="clientsearch_collections_query">:</a>
+### `client$search_collections_query(..., "output_format")` <a name="clientsearch_collections_query">:</a>
 
 **Description**: Query the collections in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
@@ -431,16 +432,16 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 **Example**:
 
 ```python
-client.search_collections_query('collection_name*lake','inserted_by=user1@gmail.com','inserted_at>1747934722', 'public=True', output_format='table')
+client$search_collections_query('collection_name*lake','inserted_by=user1@gmail.com','inserted_at>1747934722', 'public=True', output_format='table')
 ```
 
 ```python
-client.search_collections_query('collection_name=covid-cases', output_format='json')
+client$search_collections_query('collection_name=covid-cases', output_format='json')
 ```
 
 ---
 
-### `client$search_files_by_keyword(keyword, output_format)` <a name="clientsearch_files_by_keyword">:</a>
+### `client$search_files_by_keyword("keyword", "output_format")` <a name="clientsearch_files_by_keyword">:</a>
 
 **Description**: Search the files in the catalogue by keyword. Enables discovery of files of datasets based on a specified keyword
 
@@ -455,7 +456,7 @@ client.search_collections_query('collection_name=covid-cases', output_format='js
 
 ---
 
-### `client$search_files_query(..., output_format)` <a name="clientsearch_files_query">:</a>
+### `client$search_files_query(..., "output_format")` <a name="clientsearch_files_query">:</a>
 
 **Description**: Query the files in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 

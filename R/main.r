@@ -267,8 +267,7 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
         create_collection = function(
             storage_type,
             collection_name,
-            namenode_address = NULL,
-            bucket_name = NULL,
+            bucket_name,
             collection_description = NULL,
             public = NULL,
             secret = NULL
@@ -284,9 +283,13 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
                 collection_name = collection_name
             )
 
+            if(storage_type == "hdfs"){
+                payload[["namenode_address"]] <- bucket_name
+            } else {
+                payload[["bucket_name"]] <- bucket_name
+            }
+
             optional_params <- list(
-                namenode_address = namenode_address,
-                bucket_name = bucket_name,
                 collection_description = collection_description,
                 public = public,
                 secret = secret
@@ -648,7 +651,6 @@ LakehouseClient <- R6::R6Class("LakehouseClient",
             file_category = "unstructured", 
             file_description = NULL,
             file_version = 1,
-            file_size = 0,
             public=FALSE,
             processing_level = NULL
         ) {  
