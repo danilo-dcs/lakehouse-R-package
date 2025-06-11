@@ -894,7 +894,7 @@ setup_client <- function(url) {
 
 
     list(
-        auth,
+        auth=auth,
         create_collection=create_collection,
         download_file=download_file,
         get_dataframe=get_dataframe,
