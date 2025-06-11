@@ -1,4 +1,4 @@
-#' LakehouseClient Package
+#' LakehouseClient
 #' @import arrow
 #' @import httr
 #' @import jsonlite
