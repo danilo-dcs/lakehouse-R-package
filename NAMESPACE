@@ -7,4 +7,4 @@ import(R6)
 import(stringr)
 import(dplyr)
 
-export(LakehouseClient)
+export(setup_client)

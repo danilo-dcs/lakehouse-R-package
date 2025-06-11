@@ -7,6 +7,7 @@
 #' @import stringr
 #' @import dplyr
 #' @import readr
+#' Setup Lakehouse Client function
 #' @export
 setup_client <- function(url) {
 
