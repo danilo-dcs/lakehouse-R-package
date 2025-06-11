@@ -12,7 +12,7 @@
 
 
 
-create_client <- function(url) {
+setup_client <- function(url) {
 
     domain <- gsub("^https?://", "", url)
     lakehouse_url <- paste0("http://", domain)
