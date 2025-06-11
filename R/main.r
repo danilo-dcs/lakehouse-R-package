@@ -9,11 +9,10 @@
 #' @import dplyr
 #' @import readr
 #' @export
-#' 
-#' This function initializes the lakehouse client and returns a list of funtions that can be used to interact with the lakehouse system
-#' @param url String containing the lakehouse-api url
-#' @export
-client <- function(url) {
+
+
+
+create_client <- function(url) {
 
     domain <- gsub("^https?://", "", url)
     lakehouse_url <- paste0("http://", domain)
@@ -295,7 +294,7 @@ client <- function(url) {
         return(df)
     }
 
-    #'
+    #' List bucket records
     #' @return Returns an R dataframe with the storage buckets in the system
     #' @export
     list_buckets <- function() {            
@@ -380,6 +379,11 @@ client <- function(url) {
         return(format_output_dataframe__(records, output_format = "df"))
     }
 
+      #' List collections catalog records returning a json string
+    #' @param sort_by_key A string containing a valid catalog key to be user for sorting the response
+    #' @param sort_desc A boolean indicating if the reponse list should be sorted descending
+    #' @return A R dataframe cotaining the collection records
+    #' @export
     list_collections_json <- function(
         sort_by_key = NULL,
         sort_desc = FALSE
