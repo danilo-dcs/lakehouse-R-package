@@ -4,14 +4,10 @@
 #' @import jsonlite
 #' @import readxl
 #' @import rvest
-#' @import R6
 #' @import stringr
 #' @import dplyr
 #' @import readr
 #' @export
-
-
-
 setup_client <- function(url) {
 
     domain <- gsub("^https?://", "", url)
