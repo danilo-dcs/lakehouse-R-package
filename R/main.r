@@ -7,6 +7,8 @@
 #' @import stringr
 #' @import dplyr
 #' @import readr
+#' 
+#' 
 #' Setup Lakehouse Client function
 #' @export
 setup_client <- function(url) {
@@ -907,7 +909,7 @@ setup_client <- function(url) {
             search_collections_by_keyword,
             search_collections_query,
             search_files_by_keyword,
-            search_files_query,
+            search_files_query
         )
     )
 }
