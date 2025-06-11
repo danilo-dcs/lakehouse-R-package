@@ -893,22 +893,24 @@ setup_client <- function(url) {
 
 
 
-    list(
-        auth=auth,
-        create_collection=create_collection,
-        download_file=download_file,
-        get_dataframe=get_dataframe,
-        list_collections=list_collections,
-        list_collections_json=list_collections_json,
-        list_files=list_files,
-        list_files_json=list_files_json,
-        list_buckets=list_buckets,
-        list_buckets_json=list_buckets_json,
-        upload_dataframe=upload_dataframe,   
-        upload_file=upload_file,
-        search_collections_by_keyword=search_collections_by_keyword,
-        search_collections_query=search_collections_query,
-        search_files_by_keyword=search_files_by_keyword,
-        search_files_query=search_files_query
+    return(
+        list(
+            auth = auth,
+            create_collection = create_collection,
+            download_file = download_file,
+            get_dataframe = get_dataframe,
+            list_collections = list_collections,
+            list_collections_json = list_collections_json,
+            list_files = list_files,
+            list_files_json = list_files_json,
+            list_buckets = list_buckets,
+            list_buckets_json = list_buckets_json,
+            upload_dataframe = upload_dataframe,   
+            upload_file = upload_file,
+            search_collections_by_keyword = search_collections_by_keyword,
+            search_collections_query = search_collections_query,
+            search_files_by_keyword = search_files_by_keyword,
+            search_files_query = search_files_query
+        )
     )
 }
