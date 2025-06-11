@@ -315,7 +315,7 @@ setup_client <- function(url) {
             return(data.frame())
         }
 
-        buckets_df <- format_output_dataframe__(response_data$bucket_list, output_format = "df")
+        buckets_df <- format_output_dataframe__(response_data$bucket_list)
 
         if (nrow(buckets_df) > 0) {
             buckets_df <- buckets_df[order(buckets_df$bucket_name), , drop = FALSE]
@@ -375,7 +375,7 @@ setup_client <- function(url) {
 
 
         
-        return(format_output_dataframe__(records, output_format = "df"))
+        return(format_output_dataframe__(records))
     }
 
       #' List collections catalog records returning a json string
@@ -443,7 +443,7 @@ setup_client <- function(url) {
         
         filtered_data <- records[records$processing_level %in% filter_options, ]
         
-        return(format_output_dataframe__(filtered_data, output_format = "df"))
+        return(format_output_dataframe__(filtered_data))
     }
 
 
