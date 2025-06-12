@@ -482,7 +482,7 @@ setup_client <- function(url) {
         files <- as_tibble(list_files(sort_by_key = "collection_id"))
 
         collections <- collections %>%
-            dplyr::left_join(files, by = c("collection_id" = "collection_id", "collection_name" = "collection_name")) %>%
+            dplyr::left_join(files, by = c("id" = "collection_id", "collection_name" = "collection_name")) %>%
             dplyr::group_by(id, collection_name, storage_type, inserted_by, inserted_at, location, collection_description, public) %>%
             tidyr::nest(files = c(id, file_name, file_size, file_version, inserted_by, inserted_at, processing_level, file_category, file_description, public))
 
