@@ -6,7 +6,9 @@
 #' @import rvest
 #' @import stringr
 #' @import dplyr
+#' @import tidyr
 #' @import readr
+#' @import tibble
 #' 
 #' 
 #' Setup Lakehouse Client function
@@ -467,6 +469,32 @@ setup_client <- function(url) {
         return(json)
     }
 
+
+    #' Lists the entire storage environment and returns a nested data structures with storage buckets -> collections -> files
+    #' @Return Tibble with the full bucket hierarchy
+    #' @export
+    list_storage_structure <- function(){
+
+        bucket_list <- as_tibble(list_buckets())
+
+        collections <- as_tibble(list_collections(sort_by_key = "location"))
+
+        files <- as_tibble(list_files(sort_by_key = "collection_id"))
+
+        collections <- collections %>%
+            dplyr::left_join(files, by = c("collection_id" = "collection_id", "collection_name" = "collection_name")) %>%
+            dplyr::group_by(id, collection_name, storage_type, inserted_by, inserted_at, location, collection_description, public) %>%
+            tidyr::nest(files = c(id, file_name, file_size, file_version, inserted_by, inserted_at, processing_level, file_category, file_description, public))
+
+        bucket_nested <- bucket_list %>%
+            dplyr::left_join(collections, by = c("bucket_name" = "location", "storage_type" = "storage_type")) %>%
+            dplyr::group_by(storage_type, bucket_name) %>%
+            tidyr::nest(collections = c(id, collection_name, storage_type, inserted_by, inserted_at, location, collection_description, public, files))
+
+
+        return(bucket_nested)
+    }
+
     #' Upload R dataframes function
     #' @param df: The R dataframe contaiing the data
     #' @param df_name: the dataframe name only, without the extension. By default the dataframe will be stored as a CSV file
@@ -905,6 +933,7 @@ setup_client <- function(url) {
             list_files_json = list_files_json,
             list_buckets = list_buckets,
             list_buckets_json = list_buckets_json,
+            list_storage_structure = list_storage_structure,
             upload_dataframe = upload_dataframe,   
             upload_file = upload_file,
             search_collections_by_keyword = search_collections_by_keyword,
