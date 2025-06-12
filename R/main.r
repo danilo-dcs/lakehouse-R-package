@@ -471,7 +471,7 @@ setup_client <- function(url) {
 
 
     #' Lists the entire storage environment and returns a nested data structures with storage buckets -> collections -> files
-    #' @Return Tibble with the full bucket hierarchy
+    #' @return Tibble with the full bucket hierarchy
     #' @export
     list_storage_data <- function(){
 
@@ -933,7 +933,7 @@ setup_client <- function(url) {
             list_files_json = list_files_json,
             list_buckets = list_buckets,
             list_buckets_json = list_buckets_json,
-            list_storage_structure = list_storage_structure,
+            list_storage_data = list_storage_data,
             upload_dataframe = upload_dataframe,   
             upload_file = upload_file,
             search_collections_by_keyword = search_collections_by_keyword,
