@@ -24,6 +24,7 @@
     \item \href{#method-LakehouseClient-list_file}{\code{client$list_file()}}
     \item \href{#method-LakehouseClient-list_files_df}{\code{client$list_files_df()}}
     \item \href{#method-LakehouseClient-list_files_json}{\code{client$list_files_json()}}
+    \item \href{#method-LakehouseClient-list_storage_data}{\code{client$list_storage_data()}}
     \item \href{#method-LakehouseClient-upload_dataframe}{\code{client$upload_dataframe()}}
     \item \href{#method-LakehouseClient-upload_file}{\code{client$upload_file()}}
     \item \href{#method-LakehouseClient-search_collections_by_keyword}{\code{client$search_collections_by_keyword()}}
@@ -37,7 +38,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-auth"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-auth}{}}}
 
-  \subsection{Method \code{auth()}}{
+  \subsection{\code{auth()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$auth("email", "password")}\if{html}{\out{</div>}}
     }
@@ -60,7 +61,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-download_file"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-download_file}{}}}
 
-  \subsection{Method \code{download_file()}}{
+  \subsection{\code{download_file()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$download_file("catalog_file_id", "output_file_dir")}\if{html}{\out{</div>}}
     }
@@ -84,7 +85,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-create_collection"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-create_collection}{}}}
 
-  \subsection{Method \code{create_collection()}}{
+  \subsection{\code{create_collection()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$create_collection(
         "storage_type",
@@ -122,7 +123,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-get_dataframe"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-get_dataframe}{}}}
 
-  \subsection{Method \code{get_dataframe()}}{
+  \subsection{\code{get_dataframe()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$get_dataframe("catalogue_file_id")}\if{html}{\out{</div>}}
     }
@@ -144,7 +145,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_buckets"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_buckets}{}}}
 
-  \subsection{Method \code{list_buckets()}}{
+  \subsection{\code{list_buckets()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_buckets()}\if{html}{\out{</div>}}
     }
@@ -158,7 +159,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_buckets_df"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_buckets_df}{}}}
 
-  \subsection{Method \code{list_buckets_df()}}{
+  \subsection{\code{list_buckets_df()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_buckets_df()}\if{html}{\out{</div>}}
     }
@@ -172,7 +173,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_buckets_json"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_buckets_json}{}}}
 
-  \subsection{Method \code{list_buckets_json()}}{
+  \subsection{\code{list_buckets_json()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_buckets_json()}\if{html}{\out{</div>}}
     }
@@ -186,7 +187,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_collections"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_collections}{}}}
 
-  \subsection{Method \code{list_collections()}}{
+  \subsection{\code{list_collections()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_collections("sort_by_key", sort_desc = FALSE)}\if{html}{\out{</div>}}
     }
@@ -209,7 +210,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_collections_df"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_collections_df}{}}}
 
-  \subsection{Method \code{list_collections_df()}}{
+  \subsection{\code{list_collections_df()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_collections_df("sort_by_key", sort_desc = FALSE)}\if{html}{\out{</div>}}
     }
@@ -232,7 +233,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_collections_json"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_collections_json}{}}}
 
-  \subsection{Method \code{list_collections_json()}}{
+  \subsection{\code{list_collections_json()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_collections_json("sort_by_key", sort_desc = FALSE)}\if{html}{\out{</div>}}
     }
@@ -242,7 +243,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_file"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_file}{}}}
 
-  \subsection{Method \code{list_file()}}{
+  \subsection{\code{list_file()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_file(
         include_raw = TRUE,
@@ -277,7 +278,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_files_df"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_files_df}{}}}
 
-  \subsection{Method \code{list_files_df()}}{
+  \subsection{\code{list_files_df()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_files_df(
         include_raw = TRUE,
@@ -313,7 +314,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-list_files_json"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-list_files_json}{}}}
 
-  \subsection{Method \code{list_files_json()}}{
+  \subsection{\code{list_files_json()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$list_files_json(
         include_raw = TRUE,
@@ -345,11 +346,26 @@
     }
   }
 
+   \if{html}{\out{<hr>}}
+  \if{html}{\out{<a id="method-LakehouseClient-list_storage_data"></a>}}
+  \if{latex}{\out{\hypertarget{method-LakehouseClient-list_storage_data}{}}}
+
+  \subsection{\code{list_storage_data()}}{
+    \subsection{Usage}{
+      \if{html}{\out{<div class="r">}}\preformatted{client$list_storage_data()}
+      \if{html}{\out{</div>}}
+    }
+
+    \subsection{Returns}{
+      A nested tibble with all storage data hierarchy buckets -> collections -> files
+    }
+  }
+
   \if{html}{\out{<hr>}}
   \if{html}{\out{<a id="method-LakehouseClient-upload_dataframe"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-upload_dataframe}{}}}
 
-  \subsection{Method \code{upload_dataframe()}}{
+  \subsection{\code{upload_dataframe()}}{
     \subsection{Usage}{
     \if{html}{\out{<div class="r">}}\preformatted{client$upload_dataframe(
       df,
@@ -394,7 +410,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-upload_file"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-upload_file}{}}}
 
-  \subsection{Method \code{upload_file()}}{
+  \subsection{\code{upload_file()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$upload_file(
         "local_file_path",
@@ -439,7 +455,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-search_collections_by_keyword"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-search_collections_by_keyword}{}}}
 
-  \subsection{Method \code{search_collections_by_keyword()}}{
+  \subsection{\code{search_collections_by_keyword()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$search_collections_by_keyword("keyword")}\if{html}{\out{</div>}}
     }
@@ -461,7 +477,7 @@
   \if{html}{\out{<a id="method-LakehouseClient-search_files_by_keyword"></a>}}
   \if{latex}{\out{\hypertarget{method-LakehouseClient-search_files_by_keyword}{}}}
 
-  \subsection{Method \code{search_files_by_keyword()}}{
+  \subsection{\code{search_files_by_keyword()}}{
     \subsection{Usage}{
       \if{html}{\out{<div class="r">}}\preformatted{client$search_files_by_keyword("keyword")}\if{html}{\out{</div>}}
     }
@@ -485,7 +501,7 @@
   \if{latex}{\out{\hypertarget{method-LakehouseClient-search_collections_query}{}}}
 
 
-  \subsection{Method \code{search_collections_query()}}{
+  \subsection{\code{search_collections_query()}}{
     Search files on the catalogue based on the given filters using query strings.
 
     \subsection{Usage}{
@@ -554,7 +570,7 @@
   \if{latex}{\out{\hypertarget{method-LakehouseClient-search_files_query}{}}}
 
 
-  \subsection{Method \code{search_files_query()}}{
+  \subsection{\code{search_files_query()}}{
     Search files on the catalogue based on the given filters using query strings.
 
     \subsection{Usage}{
