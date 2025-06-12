@@ -475,22 +475,30 @@ setup_client <- function(url) {
     #' @export
     list_storage_data <- function(){
 
-        bucket_list <- tibble::as_tibble(list_buckets())
+        buckets <- tibble::as_tibble(list_buckets())
 
         collections <- tibble::as_tibble(list_collections(sort_by_key = "location"))
 
         files <- tibble::as_tibble(list_files(sort_by_key = "collection_id"))
 
-        collections <- collections %>%
-            dplyr::left_join(files, by = c("id" = "collection_id", "collection_name" = "collection_name")) %>%
+        nested_collections <- collections %>%
+            dplyr::left_join(files, by = c("id" = "collection_id"), suffix = c("", "_file")) %>%
             dplyr::group_by(id, collection_name, storage_type, inserted_by, inserted_at, location, collection_description, public) %>%
-            tidyr::nest(files = c(id, file_name, file_size, file_version, inserted_by, inserted_at, processing_level, file_category, file_description, public))
+            tidyr::nest(files = c(
+                id_file, file_name, file_size, file_version, 
+                inserted_by_file, inserted_at_file, processing_level,
+                file_category, file_description, public_file, 
+                collection_name_file, storage_type_file, file_location,
+                file_status, expires_at
+            ))
 
-        bucket_nested <- bucket_list %>%
-            dplyr::left_join(collections, by = c("bucket_name" = "location", "storage_type" = "storage_type")) %>%
+        bucket_nested <- buckets %>%
+            dplyr::left_join(nested_collections, by = c("bucket_name" = "location", "storage_type" = "storage_type")) %>%
             dplyr::group_by(storage_type, bucket_name) %>%
-            tidyr::nest(collections = c(id, collection_name, storage_type, inserted_by, inserted_at, location, collection_description, public, files))
-
+            tidyr::nest(collections = c(
+                id, collection_name, inserted_by, inserted_at, status,
+                collection_description, public, secret, files
+            ))
 
         return(bucket_nested)
     }
