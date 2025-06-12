@@ -7,5 +7,6 @@ import(stringr)
 import(dplyr)
 import(tidyr)
 import(tibble)
+import(magrittr)
 
 export(setup_client)

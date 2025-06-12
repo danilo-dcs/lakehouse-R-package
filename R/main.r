@@ -9,7 +9,7 @@
 #' @import tidyr
 #' @import readr
 #' @import tibble
-#' 
+#' @import magrittr
 #' 
 #' Setup Lakehouse Client function
 #' @export
@@ -475,11 +475,11 @@ setup_client <- function(url) {
     #' @export
     list_storage_data <- function(){
 
-        bucket_list <- as_tibble(list_buckets())
+        bucket_list <- tibble::as_tibble(list_buckets())
 
-        collections <- as_tibble(list_collections(sort_by_key = "location"))
+        collections <- tibble::as_tibble(list_collections(sort_by_key = "location"))
 
-        files <- as_tibble(list_files(sort_by_key = "collection_id"))
+        files <- tibble::as_tibble(list_files(sort_by_key = "collection_id"))
 
         collections <- collections %>%
             dplyr::left_join(files, by = c("id" = "collection_id", "collection_name" = "collection_name")) %>%
