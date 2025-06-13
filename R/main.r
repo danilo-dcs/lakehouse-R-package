@@ -81,18 +81,15 @@ setup_client <- function(url) {
         message("Using method: ", method)
 
         headers <- httr::add_headers(
-            "Authorization" = paste("Bearer", access_token),
-            "Content-Type" = "application/json"
+            "Authorization" = paste("Bearer", access_token)
         )
         
         tryCatch({
             response <- httr::VERB(
                 method = toupper(method),
                 url = url,
-                config = c(
-                    headers, 
-                    httr::config(ssl_verifypeer = 0)
-                ),
+                httr::add_headers(.headers=headers), 
+                config = httr::config(ssl_verifypeer = 0),
                 ...
             )
             
@@ -140,7 +137,7 @@ setup_client <- function(url) {
         response <- httr::POST(
             url, 
             body = jsonlite::toJSON(auth_payload, auto_unbox = TRUE), 
-            encode = "json", 
+            encode = "json",
             config = httr::config(ssl_verifypeer = 0)
         )
 
