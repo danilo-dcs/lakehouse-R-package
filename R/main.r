@@ -73,6 +73,51 @@ setup_client <- function(url) {
         }
         return(df)
     }
+
+    make_request__ <- function(endpoint, method = "POST", ...) {
+        url <- paste0(lakehouse_url, endpoint)
+
+        headers <- httr::add_headers(
+            "Authorization" = paste("Bearer", access_token),
+            "Content-Type" = "application/json"
+        )
+        
+        tryCatch({
+            response <- httr::VERB(
+                method = method,
+                url = url,
+                config = c(headers, httr::config(ssl_verifypeer = 0)),
+                ...
+            )
+            
+            httr::stop_for_status(response)
+
+            response_text <- httr::content(response, as = "text", encoding = "UTF-8")
+            
+            data <- jsonlite::fromJSON(response_text)
+
+            return(data)
+            
+        }, error = function(e) {
+            if (inherits(e, "http_error")) {
+                response <- e$response
+                error_detail <- tryCatch({
+                    resp_content <- httr::content(response, as="text", encoding="UTF-8")
+                    resp_content <- jsonlite::fromJSON(text_response)
+
+                    if (!is.null(resp_content$detail)) resp_content$detail else rawToChar(response$content)
+
+                }, error = function(e) {
+                    rawToChar(response$content) %||% "No error details provided"
+                })
+                
+                stop(paste0("API request failed (", status_code(response), "): ", error_detail), call. = FALSE)
+            }
+            else if (inherits(e, "error")) {
+                stop(paste0("Request failed: ", e$message), call. = FALSE)
+            }
+        })
+    }
     
 
     #' Authenticates the lakehouse client
@@ -412,25 +457,10 @@ setup_client <- function(url) {
         sort_by_key = NULL, 
         sort_desc = FALSE
     ) {  
-        headers <- c(
-            "Authorization" = paste("Bearer", access_token)
-        )
+   
+        response <- make_request__(endpoint = "/catalog/files/all", method = "GET")
         
-        response <- httr::GET(url = paste0(lakehouse_url, "/catalog/files/all"), httr::add_headers(.headers=headers), config = httr::config(ssl_verifypeer = 0))
-
-        if (httr::status_code(response) != 200) {
-            stop("Error: Failed to fetch files. HTTP status: ", httr::status_code(response))
-        }
-
-        response_text <- httr::content(response, as = "text", encoding = "UTF-8")
-
-        if (nchar(response_text) == 0) {
-            return(list())
-        }
-        
-        data <- jsonlite::fromJSON(response_text)
-        
-        records <- data$records
+        records <- response$records
 
         if (length(records) == 0 || is.null(records)) {
             return(data.frame())
