@@ -644,6 +644,8 @@ setup_client <- function(url) {
         status_response <- httr::PUT(status_url, httr::add_headers(.headers=headers), body = jsonlite::toJSON(status_payload, auto_unbox = TRUE), config = httr::config(ssl_verifypeer = 0))
 
         parsed_response <- httr::content(status_response, as = "text", encoding = "UTF-8")
+
+        print("File uploaded!")
         
         return(jsonlite::fromJSON(parsed_response))
     }
