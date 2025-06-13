@@ -127,6 +127,7 @@ setup_client <- function(url) {
         catalog_file_id, 
         output_file_dir
     ) {        
+        print("Downloading File ...")
         headers <- c(Authorization = paste("Bearer", access_token))
         url <- paste0(lakehouse_url, "/catalog/file/id/", catalog_file_id)
 
@@ -173,6 +174,8 @@ setup_client <- function(url) {
         } else {
             stop("Failed to download file")
         }
+
+        print(paste("File donwloaded at", output_file_dir))
         
         return(output_file_path)
     }
@@ -567,6 +570,7 @@ setup_client <- function(url) {
         public=FALSE,
         processing_level = NULL
     ) {  
+        print("uploading File ...")
         file_size <- file.info(local_file_path)$size
         
         payload <- list(
