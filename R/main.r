@@ -175,7 +175,7 @@ setup_client <- function(url) {
             stop("Failed to download file")
         }
 
-        print(paste("File donwloaded at", output_file_dir))
+        print(paste("File donwloaded to ", output_file_dir))
         
         return(output_file_path)
     }
