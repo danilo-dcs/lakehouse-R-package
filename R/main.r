@@ -77,9 +77,6 @@ setup_client <- function(url) {
     make_request__ <- function(endpoint, method = "POST", ...) {
         url <- paste0(lakehouse_url, endpoint)
 
-        message("Making request to: ", url)
-        message("Using method: ", method)
-
         headers <- c(Authorization = paste("Bearer", access_token))
         
         tryCatch({
@@ -127,32 +124,15 @@ setup_client <- function(url) {
         email,
         password
     ) {
-        auth_route_sulfix <- "auth/login"
         auth_payload <- list(email = email, password = password)
 
-        url <- paste0(lakehouse_url, "/", auth_route_sulfix)
+        response <- make_request__(endpoint = "/auth/login", method = "POST", auth_payload)
         
-        response <- httr::POST(
-            url, 
-            body = jsonlite::toJSON(auth_payload, auto_unbox = TRUE), 
-            encode = "json",
-            config = httr::config(ssl_verifypeer = 0)
-        )
-
-
-        if (httr::status_code(response) != 200) {
-            stop("Error: Failed to authenticate. HTTP status: ", httr::status_code(response))
-        }
-
-        text_response <- httr::content(response, as="text", encoding="UTF-8")
-
-        response_content <- jsonlite::fromJSON(text_response)
-        
-        if (!is.null(response_content)) {
-            user_id <<- response_content$user_id
-            user_role <<- response_content$user_role
-            access_token <<- response_content$access_token
-            access_token_type <<- response_content$token_type
+        if (!is.null(response)) {
+            user_id <<- response$user_id
+            user_role <<- response$user_role
+            access_token <<- response$access_token
+            access_token_type <<- response$token_type
             user_email <<- email
 
             return("Session Authenticated!")
@@ -171,42 +151,24 @@ setup_client <- function(url) {
         output_file_dir
     ) {        
         print("Downloading File ...")
-        headers <- c(Authorization = paste("Bearer", access_token))
-        url <- paste0(lakehouse_url, "/catalog/file/id/", catalog_file_id)
 
-        response <- httr::GET(url, httr::add_headers(.headers=headers), config = httr::config(ssl_verifypeer = 0))
+        endpoint <- paste0("/catalog/file/id/", catalog_file_id)
 
-        if (httr::status_code(response) != 200) {
-            stop("Unable to get download url")
-        }
+        catalog_item <- make_request__(endpoint = endpoint, method = "GET")
 
-        catalog_item <- jsonlite::fromJSON(httr::content(response, as="text", encoding="UTF-8"))
-
-        if (is.null(catalog_item)) {
+        if (is.null(response)) {
             stop("Unable to fetch catalog item")
         }
 
         payload <- list(
-            catalog_file_id = catalog_file_id
+            catalog_file_id = catalog_item$id
         )
 
-        download_url <- paste0(lakehouse_url, "/storage/files/download-request")
+        endpoint <- "/storage/files/download-request"
 
-        response <- httr::POST(
-            download_url, 
-            body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
-            httr::add_headers(.headers=headers), 
-            httr::content_type_json(), 
-            config = httr::config(ssl_verifypeer = 0)
-        )
+        response <- make_request__(endpoint = endpoint, method = "POST", body = jsonlite::toJSON(payload, auto_unbox = TRUE), httr::content_type_json())
 
-        if (httr::status_code(response) != 200) {
-            stop("Unable to get download url")
-        }
-
-        response_content <- jsonlite::fromJSON(httr::content(response, "text", encoding="UTF-8"))
-
-        signed_url <- response_content$download_url
+        signed_url <- response$download_url
 
         output_file_path <- paste0(output_file_dir, "/", catalog_item$file_name)
         
@@ -266,21 +228,16 @@ setup_client <- function(url) {
 
         payload <- payload[!sapply(payload, is.null)]
 
-        headers <- c(
-            "Authorization" = paste("Bearer", access_token)
+        endpoint <- "/storage/collections/create"
+
+        response <- make_request__(
+            endpoint = endpoint, 
+            method = "POST", 
+            body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
+            httr::content_type_json()
         )
 
-        url <- paste0(lakehouse_url, "/storage/collections/create")
-        
-        response <- httr::POST(url, body = jsonlite::toJSON(payload, auto_unbox = TRUE), encode = "json", httr::add_headers(.headers = headers), config = httr::config(ssl_verifypeer = 0))
-
-        if (httr::status_code(response) != 200) {
-            stop("Error: Failed to add collection. HTTP status: ", httr::status_code(response))
-        }
-
-        text_response <- httr::content(response, as="text", encoding="UTF-8")
-
-        return(jsonlite::fromJSON(text_response))
+        return(response)
     }
 
     #' Get a sctructured file as a R doataframe
@@ -344,26 +301,19 @@ setup_client <- function(url) {
     #' List bucket records
     #' @return Returns an R dataframe with the storage buckets in the system
     #' @export
-    list_buckets <- function() {            
-        headers <- c("Authorization" = paste("Bearer", access_token))
-        
-        url <- paste0(lakehouse_url, "/storage/bucket-list")
-        
-        response <- httr::GET(
-            url = url, 
-            httr::add_headers(.headers = headers), 
-            config = httr::config(ssl_verifypeer = 0)
+    list_buckets <- function() { 
+        endpoint <- "/storage/bucket-list"
+
+        response <- make_request__(
+            endpoint = endpoint,
+            method = "GET"
         )
 
-        respose_text <- httr::content(response, as = "text", encoding = "UTF-8")
-
-        response_data <- jsonlite::fromJSON(respose_text)
-
-        if (!is.null(response_data$error) || length(response_data$bucket_list) == 0) {
+        if (!is.null(response$error) || length(response$bucket_list) == 0) {
             return(data.frame())
         }
 
-        buckets_df <- format_output_dataframe__(response_data$bucket_list)
+        buckets_df <- format_output_dataframe__(response$bucket_list)
 
         if (nrow(buckets_df) > 0) {
             buckets_df <- buckets_df[order(buckets_df$bucket_name), , drop = FALSE]
@@ -389,29 +339,15 @@ setup_client <- function(url) {
         sort_by_key = NULL, 
         sort_desc = FALSE
     ) {     
-        headers <- c(
-            "Authorization" = paste("Bearer", access_token)
-        )
-        
-        response <- httr::GET(
-            url = paste0(lakehouse_url, "/catalog/collections/all"), 
-            httr::add_headers(.headers=headers), 
-            config = httr::config(ssl_verifypeer = 0)
+
+        endpoint <- "/catalog/collections/all"
+       
+        response <- make_request__(
+            endpoint = endpoint,
+            method = "GET"
         )
 
-        if (httr::status_code(response) != 200) {
-            stop("Error: Failed to fetch collections. HTTP status: ", httr::status_code(response))
-        }
-
-        response_text <- httr::content(response, as = "text", encoding = "UTF-8")
-
-        if (nchar(response_text) == 0) {
-            return(list())
-        }
-        
-        data <- jsonlite::fromJSON(response_text)
-
-        records <- data$records
+        records <- response$records
 
         if (length(records) == 0 || is.null(records)) {
             return(data.frame())
@@ -420,8 +356,6 @@ setup_client <- function(url) {
         if (!is.null(sort_by_key) && sort_by_key %in% names(records)) {
             records <- records[order(records[[sort_by_key]], decreasing = sort_desc), ]
         }
-
-
         
         return(format_output_dataframe__(records))
     }
@@ -455,8 +389,10 @@ setup_client <- function(url) {
         sort_by_key = NULL, 
         sort_desc = FALSE
     ) {  
+
+        endpoint <- "/catalog/files/all"
    
-        response <- make_request__(endpoint = "/catalog/files/all", method = "GET")
+        response <- make_request__(endpoint = endpoint, method = "GET")
         
         records <- response$records
 
@@ -623,31 +559,21 @@ setup_client <- function(url) {
 
         payload <- payload[!sapply(payload, is.null)]
         
-        headers <- c("Authorization" = paste("Bearer", access_token))
-        
-        url <- paste0(lakehouse_url, "/storage/files/upload-request")
-        
-        response <- httr::POST(
-            url, 
-            httr::add_headers(.headers=headers), 
-            body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
-            config = httr::config(ssl_verifypeer = 0)
+        endpoint <-"/storage/files/upload-request"
+   
+        response <- make_request__(
+            endpoint = endpoint,
+            method = "POST",
+            body = jsonlite::toJSON(payload, auto_unbox = TRUE),
+            httr::content_type_json()
         )
-
-        if (httr::status_code(response) != 200) {
-            stop("Unable to get upload URL")
-        }
-
-        response_text <- httr::content(response, as = "text", encoding = "UTF-8")
-
-        if (nchar(response_text) == 0) {
+        
+        if (nchar(response) == 0) {
             stop("Unable to get upload URL -> No content")
         }
         
-        response_content <- jsonlite::fromJSON(response_text)
-        
-        signed_url <- response_content$upload_url
-        catalog_record_id <- response_content$catalog_record_id
+        signed_url <- response$upload_url
+        catalog_record_id <- response$catalog_record_id
         
         file_conn <- file(local_file_path, "rb")
         
@@ -671,15 +597,18 @@ setup_client <- function(url) {
         
         status_payload <- list(status = "ready")
 
-        status_url <- paste0(lakehouse_url, "/catalog/set-file-status/", catalog_record_id)
-
-        status_response <- httr::PUT(status_url, httr::add_headers(.headers=headers), body = jsonlite::toJSON(status_payload, auto_unbox = TRUE), config = httr::config(ssl_verifypeer = 0))
-
-        parsed_response <- httr::content(status_response, as = "text", encoding = "UTF-8")
+        status_url <- paste0("/catalog/set-file-status/", catalog_record_id)
+   
+        response <- make_request__(
+            endpoint = status_url,
+            method = "PUT",
+            body = jsonlite::toJSON(status_payload, auto_unbox = TRUE),
+            httr::content_type_json()
+        )
 
         print("File uploaded!")
         
-        return(jsonlite::fromJSON(parsed_response))
+        return(response)
     }
 
     #' Search for collection names using a given keyword
@@ -701,22 +630,17 @@ setup_client <- function(url) {
             stop("Incorrect filter format!")
         })
 
-        headers <- c("Authorization" = paste("Bearer", access_token))
         
-        url <- paste0(lakehouse_url,"/catalog", "/collections", "/search")
-
-        response <- httr::POST(
-            url, httr::add_headers(.headers=headers), 
-            body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
-            config = httr::config(ssl_verifypeer = 0),
-            encode = "json"
+        endpoint <- "/catalog/collections/search"
+   
+        response <- make_request__(
+            endpoint = endpoint,
+            method = "POST",
+            body = jsonlite::toJSON(payload, auto_unbox = TRUE),
+            httr::content_type_json()
         )
 
-        respose_text <- httr::content(response, as="text", encoding="UTF-8")
-        
-        response_data <- jsonlite::fromJSON(respose_text)
-
-        records <- response_data$records %||% list()
+        records <- response$records %||% list()
         
         records <- format_output_dataframe__(dataset = records)
         
@@ -742,23 +666,17 @@ setup_client <- function(url) {
         }, error = function(e) {
             stop("Incorrect filter format!")
         })
-
-        headers <- c("Authorization" = paste("Bearer", access_token))
         
-        url <- paste0(lakehouse_url,"/catalog", "/files", "/search")
-
-        response <- httr::POST(
-            url, httr::add_headers(.headers=headers), 
-            body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
-            config = httr::config(ssl_verifypeer = 0),
-            encode = "json"
+        endpoint <- "/catalog/files/search"
+   
+        response <- make_request__(
+            endpoint = endpoint,
+            method = "POST",
+            body = jsonlite::toJSON(payload, auto_unbox = TRUE),
+            httr::content_type_json()
         )
 
-        respose_text <- httr::content(response, as="text", encoding="UTF-8")
-        
-        response_data <- jsonlite::fromJSON(respose_text)
-
-        records <- response_data$records %||% list()
+        records <- response$records %||% list()
         
         records <- format_output_dataframe__(dataset = records)
         
@@ -833,30 +751,22 @@ setup_client <- function(url) {
             stop("Incorrect filter format!")
         })
 
-        headers <- c(
-            "Authorization" = paste("Bearer", access_token)
-        )
+        endpoint <- "/catalog/collections/search"
 
         response <- tryCatch({
-            httr::POST(
-                url = paste0(lakehouse_url, "/catalog/collections/search"),
-                httr::add_headers(.headers = headers),
+
+            make_request__(
+                endpoint = endpoint,
+                method = "POST",
                 body = payload,
-                encode = "json"
+                httr::content_type_json()
             )
+
         }, error = function(e) {
             stop("Request failed: ", e$message)
         })
 
-        if (httr::http_error(response) || !length(httr::content(response))) {
-            return(list())
-        }
-
-        respose_text <- httr::content(response, as="text", encoding="UTF-8")
-        
-        response_data <- jsonlite::fromJSON(respose_text)
-
-        records <- response_data$records %||% list()
+        records <- response$records %||% list()
 
         records <- format_output_dataframe__(dataset = records)
 
@@ -931,30 +841,22 @@ setup_client <- function(url) {
             stop("Incorrect filter format!")
         })
 
-        headers <- c(
-            "Authorization" = paste("Bearer", access_token)
-        )
+        endpoint <- "/catalog/files/search"
 
         response <- tryCatch({
-            httr::POST(
-                url = paste0(lakehouse_url, "/catalog/files/search"),
-                httr::add_headers(.headers = headers),
+
+            make_request__(
+                endpoint = endpoint,
+                method = "POST",
                 body = payload,
-                encode = "json"
+                httr::content_type_json()
             )
+
         }, error = function(e) {
             stop("Request failed: ", e$message)
         })
 
-        if (httr::http_error(response) || !length(httr::content(response))) {
-            return(list())
-        }
-
-        respose_text <- httr::content(response, as="text", encoding="UTF-8")
-        
-        response_data <- jsonlite::fromJSON(respose_text)
-
-        records <- response_data$records %||% list()
+        records <- response$records %||% list()
 
         records <- format_output_dataframe__(dataset = records)
 
