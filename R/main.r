@@ -80,13 +80,11 @@ setup_client <- function(url) {
         message("Making request to: ", url)
         message("Using method: ", method)
 
-        headers <- httr::add_headers(
-            "Authorization" = paste("Bearer", access_token)
-        )
+        headers <- c(Authorization = paste("Bearer", access_token))
         
         tryCatch({
             response <- httr::VERB(
-                method = toupper(method),
+                verb = toupper(method),
                 url = url,
                 httr::add_headers(.headers=headers), 
                 config = httr::config(ssl_verifypeer = 0),
