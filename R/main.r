@@ -126,7 +126,12 @@ setup_client <- function(url) {
     ) {
         auth_payload <- list(email = email, password = password)
 
-        response <- make_request__(endpoint = "/auth/login", method = "POST", auth_payload)
+        response <- make_request__(
+            endpoint = "/auth/login", 
+            method = "POST", 
+            body = jsonlite::toJSON(auth_payload, auto_unbox = TRUE),
+            httr::content_type_json()
+        )
         
         if (!is.null(response)) {
             user_id <<- response$user_id
@@ -166,7 +171,12 @@ setup_client <- function(url) {
 
         endpoint <- "/storage/files/download-request"
 
-        response <- make_request__(endpoint = endpoint, method = "POST", body = jsonlite::toJSON(payload, auto_unbox = TRUE), httr::content_type_json())
+        response <- make_request__(
+            endpoint = endpoint,
+            method = "POST",
+            body = jsonlite::toJSON(payload, auto_unbox = TRUE),
+            httr::content_type_json()
+        )
 
         signed_url <- response$download_url
 
@@ -231,9 +241,9 @@ setup_client <- function(url) {
         endpoint <- "/storage/collections/create"
 
         response <- make_request__(
-            endpoint = endpoint, 
-            method = "POST", 
-            body = jsonlite::toJSON(payload, auto_unbox = TRUE), 
+            endpoint = endpoint,
+            method = "POST",
+            body = jsonlite::toJSON(payload, auto_unbox = TRUE),
             httr::content_type_json()
         )
 
@@ -559,7 +569,7 @@ setup_client <- function(url) {
 
         payload <- payload[!sapply(payload, is.null)]
         
-        endpoint <-"/storage/files/upload-request"
+        endpoint <- "/storage/files/upload-request"
    
         response <- make_request__(
             endpoint = endpoint,
@@ -630,7 +640,6 @@ setup_client <- function(url) {
             stop("Incorrect filter format!")
         })
 
-        
         endpoint <- "/catalog/collections/search"
    
         response <- make_request__(
@@ -758,7 +767,7 @@ setup_client <- function(url) {
             make_request__(
                 endpoint = endpoint,
                 method = "POST",
-                body = payload,
+                body = jsonlite::toJSON(payload, auto_unbox = TRUE),
                 httr::content_type_json()
             )
 
@@ -848,7 +857,7 @@ setup_client <- function(url) {
             make_request__(
                 endpoint = endpoint,
                 method = "POST",
-                body = payload,
+                body = jsonlite::toJSON(payload, auto_unbox = TRUE),
                 httr::content_type_json()
             )
 
