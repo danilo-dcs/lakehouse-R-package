@@ -649,6 +649,10 @@ setup_client <- function(url) {
             httr::content_type_json()
         )
 
+        if (length(response$records) == 0 || is.null(response$records)) {
+            return(data.frame())
+        }
+
         records <- response$records %||% list()
         
         records <- format_output_dataframe__(dataset = records)
@@ -684,6 +688,10 @@ setup_client <- function(url) {
             body = jsonlite::toJSON(payload, auto_unbox = TRUE),
             httr::content_type_json()
         )
+
+        if (length(response$records) == 0 || is.null(response$records)) {
+            return(data.frame())
+        }
 
         records <- response$records %||% list()
         
@@ -775,6 +783,10 @@ setup_client <- function(url) {
             stop("Request failed: ", e$message)
         })
 
+        if (length(response$records) == 0 || is.null(response$records)) {
+            return(data.frame())
+        }
+
         records <- response$records %||% list()
 
         records <- format_output_dataframe__(dataset = records)
@@ -864,6 +876,10 @@ setup_client <- function(url) {
         }, error = function(e) {
             stop("Request failed: ", e$message)
         })
+
+        if (length(response$records) == 0 || is.null(response$records)) {
+            return(data.frame())
+        }
 
         records <- response$records %||% list()
 
