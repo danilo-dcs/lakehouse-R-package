@@ -511,7 +511,7 @@
     \subsection{Arguments}{
       \if{html}{\out{<div class="arguments">}}
       \describe{
-        \item{\code{...}}{Query strings containing search terms in KEY[OPERATOR]VALUE format}
+        \item{\code{...}}{Query strings containing search terms in "KEY[OPERATOR]VALUE" format}
       }
       \if{html}{\out{</div>}}
     }
@@ -521,7 +521,7 @@
     }
 
     \subsection{Query String Structure}{
-      The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+      The query string should follow the pattern: \code{"KEY[OPERATOR]VALUE"}\cr
       Supported operators:
       \itemize{
         \item \code{=} - Equal to
@@ -533,7 +533,7 @@
       }
 
 
-      The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+      The query string should follow the pattern: \code{"KEY[OPERATOR]VALUE"}\cr
       Supported operators:
       \itemize{
         \item \code{=} - Equal to
@@ -553,10 +553,10 @@
 
         # Multiple conditions
         client$search_collections_query(
-          'collection_name*lake',
-          'inserted_by=user1@gmail.com',
-          'inserted_at>1747934722',
-          'public=TRUE'
+          "collection_name*lake",
+          "inserted_by=user1@gmail.com",
+          "inserted_at>1747934722",
+          "public=TRUE"
         )
       }
 
@@ -580,7 +580,7 @@
     \subsection{Arguments}{
       \if{html}{\out{<div class="arguments">}}
       \describe{
-        \item{\code{...}}{Query strings containing search terms in KEY[OPERATOR]VALUE format}
+        \item{\code{...}}{Query strings containing search terms in "KEY[OPERATOR]VALUE" format}
       }
       \if{html}{\out{</div>}}
     }
@@ -591,7 +591,7 @@
 
 
     \subsection{Query String Structure}{
-      The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+      The query string should follow the pattern: \code{"KEY[OPERATOR]VALUE"}\cr
       Supported operators:
       \itemize{
         \item \code{=} - Equal to
@@ -603,7 +603,7 @@
       }
 
 
-      The query string should follow the pattern: \code{KEY[OPERATOR]VALUE}\cr
+      The query string should follow the pattern: \code{"KEY[OPERATOR]VALUE"}\cr
       Supported operators:
       \itemize{
         \item \code{=} - Equal to
@@ -623,10 +623,10 @@
 
         # Multiple conditions
         client$search_files_query(
-          'file_name*lake',
-          'inserted_by=user1@gmail.com',
-          'inserted_at>1747934722',
-          'public=TRUE'
+          "file_name*lake",
+          "inserted_by=user1@gmail.com",
+          "inserted_at>1747934722",
+          "public=TRUE"
         )
       }
     }

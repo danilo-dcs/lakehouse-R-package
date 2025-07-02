@@ -1,4 +1,4 @@
-# Lakehouse App Python Lib
+# Lakehouse App - R Lib
 
 This R lib supports the access to the lakehouse app via R scripts
 
@@ -22,7 +22,7 @@ library(LakehouseClient)
 To use the lakehouse functionalities create an instance of LakehouseClient by running:
 
 ```r
-client <- LakehouseClient$new("lakehouse_app_url")
+client <- setup_client("lakehouse_app_url")
 ```
 
 _If you are facing issues to install the LakehouseClient library and it's dependencies on RStudio, please try to create a new empty RStudio project and the import the LakehouseClient library_.
@@ -280,14 +280,13 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 ---
 
-### `client$search_collections_by_keyword("keyword", "output_format")` <a name="clientsearch_collections_by_keyword">:</a>
+### `client$search_collections_by_keyword("keyword")` <a name="clientsearch_collections_by_keyword">:</a>
 
 **Description**: Search the collections in the catalogue by keyword. Enables discovery of collections of datasets based on a specified keyword
 
 **Function Arguments**:
 
-- keyword (str): A string containing the string keyword to match with the collection names,
-- output_format (str): A string specifying the output format, it must be one of the following formats: "dict", "df" or "json". If not specified a table-formatted string will be returned
+- keyword (str): A string containing the string keyword to match with the collection names (collection_name)
 
 **Returns:**
 
@@ -295,7 +294,7 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 ---
 
-### `client$search_collections_query(..., "output_format")` <a name="clientsearch_collections_query">:</a>
+### `client$search_collections_query(...)` <a name="clientsearch_collections_query">:</a>
 
 **Description**: Query the collections in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
@@ -305,10 +304,17 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 **Function Arguments**:
 
-- ...: String args containing the query parameters
-- output_format: the result output format, it must be one of the follwing formats: "dict", "df" or "json". If not specified a table-formatted string will be returned
+- ...: String args containing the search terms
 
-**Query Parameters List**:
+**Search Terms Structure**:
+
+"SEARCH_PARAMETER[OPERATOR]VALUE"
+
+- SEARCH_PARAMETER: must be one of the query parameters listed below
+- OPERATOR: must be one of the following "=", ">","<", ">=", "<=" or the wildcard operator "\*" (substring match)
+- VALUE: Value for each parameter
+
+**Search Parameters List**:
 
 - `id`
 - `collection_name`
@@ -319,34 +325,25 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 - `collection_description`
 - `public`
 
-**Query String Structure**:
-
-"QUERY_PARAMETER <OPERATOR> VALUE"
-
-- QUERY_PARAMETER: must be one of the query parameters listed above
-- OPERTOR: must be one of the following "=", ">","<", ">=", "<=" or the wildcard operator "\*" (substring match)
-- VALUE: Value for each parameter
-
 **Example**:
 
 ```python
-client$search_collections_query('collection_name*lake','inserted_by=user1@gmail.com','inserted_at>1747934722', 'public=True', output_format='table')
+client$search_collections_query("collection_name*lake","inserted_by=user1@gmail.com","inserted_at>1747934722", "public=True")
 ```
 
 ```python
-client$search_collections_query('collection_name=covid-cases', output_format='json')
+client$search_collections_query("collection_name=covid-cases")
 ```
 
 ---
 
-### `client$search_files_by_keyword("keyword", "output_format")` <a name="clientsearch_files_by_keyword">:</a>
+### `client$search_files_by_keyword("keyword")` <a name="clientsearch_files_by_keyword">:</a>
 
 **Description**: Search the files in the catalogue by keyword. Enables discovery of files of datasets based on a specified keyword
 
 **Function Arguments**:
 
-- keyword (str): A string containing the string keyword to match with the file names,
-- output_format (str): A string specifying the output format, it must be one of the following formats: "dict", "df" or "json". If not specified a table-formatted string will be returned
+- keyword (str): A string containing the string keyword to match with the file names
 
 **Returns:**
 
@@ -354,7 +351,7 @@ client$search_collections_query('collection_name=covid-cases', output_format='js
 
 ---
 
-### `client$search_files_query(..., "output_format")` <a name="clientsearch_files_query">:</a>
+### `client$search_files_query(...)` <a name="clientsearch_files_query">:</a>
 
 **Description**: Query the files in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
@@ -364,10 +361,17 @@ client$search_collections_query('collection_name=covid-cases', output_format='js
 
 **Function Arguments**:
 
-- ...: String args containing the query parameters
-- output_format: the result output format, it must be one of the follwing formats: "dict", "df" or "json". If not specified a table-formatted string will be returned
+- ...: String args containing the search terms
 
-**Query Parameters List**:
+**Search Terms Structure**:
+
+"SEARCH_PARAMETER[OPERATOR]VALUE"
+
+- SEARCH_PARAMETER: must be one of the query parameters listed below
+- OPERATOR: must be one of the following "=", ">","<", ">=", "<=" or the wildcard operator "\*" (substring match)
+- VALUE: Value for each parameter
+
+**Search Parameters List**:
 
 - `id`
 - `file_name`
@@ -381,22 +385,14 @@ client$search_collections_query('collection_name=covid-cases', output_format='js
 - `file_version`
 - `public`
 
-**Query String Structure**:
-
-"QUERY_PARAMETER [OPERATOR] VALUE"
-
-- QUERY_PARAMETER: must be one of the query parameters listed above
-- OPERATOR: must be one of the following "=", ">","<", ">=", "<=" or the wildcard operator "\*" (substring match)
-- VALUE: Value for each parameter
-
 **Example**:
 
 ```r
-client$search_files_query('file_name*zika','inserted_by=user1@gmail.com','inserted_at>1747934722', 'public=True', 'processing_level=raw', 'file_category=structured')
+client$search_files_query("file_name*zika","inserted_by=user1@gmail.com","inserted_at>1747934722", "public=True", "processing_level=raw", "file_category=structured")
 ```
 
 ```r
-client$search_files_query('file_name=zeros.zip', output_format='json')
+client$search_files_query("file_name=zeros.zip")
 ```
 
 ---
