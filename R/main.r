@@ -98,18 +98,18 @@ setup_client <- function(url) {
             
         }, error = function(e) {
             if (inherits(e, "http_error")) {
-            response <- e$response
-            error_detail <- tryCatch({
-                resp_content <- httr::content(response, as = "text", encoding = "UTF-8")
-                parsed_content <- jsonlite::fromJSON(resp_content)
-                if (!is.null(parsed_content$detail)) parsed_content$detail else resp_content
-            }, error = function(e) {
-                rawToChar(response) %||% "No error details provided"
-            })
-            
-            stop(paste0("API request failed (", httr::status_code(response), "): ", error_detail), call. = FALSE)
+                response <- e$response
+                error_detail <- tryCatch({
+                    resp_content <- httr::content(response, as = "text", encoding = "UTF-8")
+                    parsed_content <- jsonlite::fromJSON(resp_content)
+                    if (!is.null(parsed_content$detail)) parsed_content$detail else resp_content
+                }, error = function(e) {
+                    "No error details provided"
+                })
+                
+                stop(paste0("API request failed (", httr::status_code(response), "): ", error_detail), call. = FALSE)
             } else {
-            stop(paste0("Request failed: ", e$message), call. = FALSE)
+                stop(paste0("Request failed: ", e$message), call. = FALSE)
             }
         })
     }
