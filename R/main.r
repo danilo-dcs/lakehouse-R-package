@@ -104,7 +104,7 @@ setup_client <- function(url) {
                 parsed_content <- jsonlite::fromJSON(resp_content)
                 if (!is.null(parsed_content$detail)) parsed_content$detail else resp_content
             }, error = function(e) {
-                rawToChar(response$content) %||% "No error details provided"
+                rawToChar(response) %||% "No error details provided"
             })
             
             stop(paste0("API request failed (", httr::status_code(response), "): ", error_detail), call. = FALSE)
