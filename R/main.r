@@ -161,7 +161,7 @@ setup_client <- function(url) {
 
         catalog_item <- make_request__(endpoint = endpoint, method = "GET")
 
-        if (is.null(response)) {
+        if (is.null(catalog_item)) {
             stop("Unable to fetch catalog item")
         }
 
