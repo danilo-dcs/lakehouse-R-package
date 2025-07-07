@@ -578,7 +578,7 @@ setup_client <- function(url) {
             httr::content_type_json()
         )
         
-        if (nchar(response) == 0) {
+        if (is.null(response)) {
             stop("Unable to get upload URL -> No content")
         }
         
