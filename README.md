@@ -28,14 +28,14 @@ client <- setup_client("lakehouse_app_url")
 _If you are facing issues to install the LakehouseClient library and it's dependencies on RStudio, please try to create a new empty RStudio project and the import the LakehouseClient library_.
 _Alternativelly, you can also set up an R environment on Google Colab or Jupyter_.
 
-## Supported Environments for Data Storage
+## 🚨 Supported Environments for Data Storage
 
 1. Google Cloud Storage (gcs)
 2. Amazon S3 (s3)
 3. Self Hosted Apache Hadoop (hdfs)
 
 
-## Lakehouse Data Storage Structure
+## 🏠 Lakehouse Data Storage Structure
 
 The lakehouse storage structure is divided in three levels: 
 - (1) The bucket where the collections of files will be phisically stored, 
