@@ -42,7 +42,7 @@ The lakehouse storage structure is divided in three levels:
 - (2) The collections are a logical group of files (similarly to a github repository of files grouped for the same logical purpose).
 - (3) The files
 
-![Storage Structure](./images/lakehouse_structure.png)
+![Storage Structure](./images/lakehouse_structure_diagram.png)
 
 ## 📚 Function Index
 
