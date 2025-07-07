@@ -579,6 +579,7 @@ setup_client <- function(url) {
         )
         
         if (is.null(response)) {
+            print(response)
             stop("Unable to get upload URL -> No content")
         }
         
