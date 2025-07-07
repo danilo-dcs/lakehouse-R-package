@@ -541,23 +541,23 @@ setup_client <- function(url) {
         file_category = "unstructured", 
         file_description = NULL,
         file_version = 1,
-        public=FALSE,
-        processing_level = NULL
+        public = FALSE,
+        processing_level = "raw"
     ) {  
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
         
         payload <- list(
             collection_catalog_id=collection_catalog_id,
-            file_name=final_file_name
-        )
-
-        optional_params <- list(
+            file_name=final_file_name,
             file_category=file_category,
             file_version=file_version,
             file_size=file_size,
             public=public,
-            processing_level=processing_level,
+            processing_level=processing_level
+        )
+
+        optional_params <- list(
             file_description=file_description
         )
 
