@@ -25,6 +25,9 @@ To use the lakehouse functionalities create an instance of LakehouseClient by ru
 client <- setup_client("lakehouse_app_url")
 ```
 
+_If you are facing issues to install the LakehouseClient library and it's dependencies on RStudio, please try to create a new empty RStudio project and the import the LakehouseClient library_.
+_Alternativelly, you can also set up an R environment on Google Colab or Jupyter_.
+
 ## Lakehouse Data Storage Structure
 
 The lakehouse storage structure is divided in three levels: 
@@ -33,9 +36,6 @@ The lakehouse storage structure is divided in three levels:
 - (3) The files
 
 ![Storage Structure](./images/lakehouse_structure.png)
-
-_If you are facing issues to install the LakehouseClient library and it's dependencies on RStudio, please try to create a new empty RStudio project and the import the LakehouseClient library_.
-_Alternativelly, you can also set up an R environment on Google Colab or Jupyter_.
 
 ## 📚 Function Index
 
