@@ -79,7 +79,7 @@ The lakehouse storage structure is divided in three levels:
 ### Search the lakehouse catalog
 
 - [client$search_collections_by_keyword()](#clientsearch_collections_by_keyword)
-- [client$search_collections_query()](#clientsearch_collections_catalogue)<br><br>
+- [client$search_collections_query()](#clientsearch_collections_query)<br><br>
 
 - [client$search_files_by_keyword()](#clientsearch_files_by_keyword)
 - [client$search_files_query()](#clientsearch_files_query)
