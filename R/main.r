@@ -206,8 +206,8 @@ setup_client <- function(url) {
     #' @return A dataset containing the collection's information in the catalog
     #' @export
     create_collection <- function(
-        storage_type,
         collection_name,
+        storage_type,
         bucket_name,
         collection_description = NULL,
         public = NULL,
