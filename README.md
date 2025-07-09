@@ -74,14 +74,20 @@ The lakehouse storage structure is divided in three levels:
 
 ### Listing Collections, files and buckets
 
+Collections:
 - [client$list_collections()](#clientlist_collections)
 - [client$list_collections_json()](#clientlist_collections_json)<br><br>
 
+Files:
 - [client$list_files()](#clientlist_files)
 - [client$list_files_json()](#clientlist_files_json)<br><br>
 
+Buckets:
 - [client$list_buckets()](#clientlist_buckets)
 - [client$list_buckets_json()](#clientlist_buckets_json)<br><br>
+
+
+### Uploading Data
 
 - [client$upload_dataframe()](#clientupload_dataframe)
 - [client$upload_file()](#clientupload_file)
