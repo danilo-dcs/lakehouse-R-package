@@ -64,7 +64,7 @@ The lakehouse storage structure is divided in three levels:
 
 - [client$create_collection()](#clientcreate_collection)
 
-### Downloading Files
+### Downloading files
 
 - [client$download_file()](#clientdownload_file)
 
@@ -72,7 +72,7 @@ The lakehouse storage structure is divided in three levels:
 
 - [client$get_dataframe()](#clientget_dataframe)
 
-### Listing Collections, files and buckets
+### Listing collections, files and buckets
 
 Collections:
 - [client$list_collections()](#clientlist_collections)
@@ -87,17 +87,17 @@ Buckets:
 - [client$list_buckets_json()](#clientlist_buckets_json)<br><br>
 
 
-### Uploading Data
+### Uploading data
 
 - [client$upload_dataframe()](#clientupload_dataframe)
 - [client$upload_file()](#clientupload_file)
 
-### Basic Search 
+### Basic search 
 
 - [client$search_collections_by_keyword()](#clientsearch_collections_by_keyword)
 - [client$search_files_by_keyword()](#clientsearch_files_by_keyword)
 
-### Advanced Search Query
+### Advanced search query
 
 - [client$search_collections_query()](#clientsearch_collections_query)
 - [client$search_files_query()](#clientsearch_files_query)
