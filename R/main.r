@@ -245,15 +245,17 @@ setup_client <- function(url) {
 
     #' Get a sctructured file as a R doataframe
     #' Condition: the file must be CSV, XLSX, TSV, JSON, MD, HTML, TEX or PARQUET. If the file record's 'file_category' property is marked as 'structured' in the catalogue, the file is can be converted into a dataframe. 
-    #' @param catalogue_file_id A string with the catalog id for the file record to be downloaded
+    #' @param catalog_file_id A string with the catalog id for the file record to be downloaded
     #' @return A dataframe representing the file selected 
     #' @export
-    get_dataframe <- function(catalogue_file_id) {
+    get_dataframe <- function(catalog_file_id) {
 
         file_load_path <- getwd()
 
+        print("Calling download file")
+
         downloaded_file_path <- download_file(
-            catalog_file_id = catalogue_file_id,
+            catalog_file_id = catalog_file_id,
             output_file_dir = file_load_path
         )
         
