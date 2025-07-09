@@ -213,7 +213,7 @@ setup_client <- function(url) {
         public = NULL,
         secret = NULL
     ) {
-        
+
         payload <- list(
             storage_type = storage_type,
             collection_name = collection_name,
@@ -230,6 +230,8 @@ setup_client <- function(url) {
         
         # Remove NULL elements using purrr::compact()
         payload <- purrr::compact(payload)
+
+        print(payload)
 
         endpoint <- "/storage/collections/create"
 
