@@ -96,7 +96,7 @@ The lakehouse storage structure is divided in three levels:
 
 ## 🔧 Function Details
 
-### `client$auth()` <a name="clientauth">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$auth()` <a name="clientauth">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -114,7 +114,7 @@ Authenticates the user based on login details. It returns the authentication tok
 
 ---
 
-### `client$create_collection()` <a name="clientcreate_collection">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$create_collection()` <a name="clientcreate_collection">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -144,7 +144,7 @@ Creates a new collection of files. Returns the newly created collection details.
 
 ---
 
-### `client$download_file()` <a name="clientdownload_file">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$download_file()` <a name="clientdownload_file">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -169,7 +169,7 @@ Downloads a file from the lakehouse catalog using its catalog ID. Returns the lo
 
 ---
 
-### `client$get_dataframe()` <a name="clientget_dataframe">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$get_dataframe()` <a name="clientget_dataframe">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -193,7 +193,7 @@ Only works if the catalog marks the file as 'structured' (or file format is CSV,
 
 ---
 
-### `client$list_collections()` <a name="clientlist_collections">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$list_collections()` <a name="clientlist_collections">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -214,7 +214,7 @@ Returns a table-formatted string with the collections records. cat() command is 
 
 ---
 
-### `client$list_collections_json()` <a name="clientlist_collections_json">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$list_collections_json()` <a name="clientlist_collections_json">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -235,7 +235,7 @@ Returns a json-formatted string with the collections records
 
 ---
 
-### `client$list_files()` <a name="clientlist_files">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$list_files()` <a name="clientlist_files">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -261,7 +261,7 @@ List files in the storage. Useful for exploring available resources before query
 
 ---
 
-### `client$list_files_json()` <a name="clientlist_files_json">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$list_files_json()` <a name="clientlist_files_json">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -287,7 +287,7 @@ List files in the storage. Useful for exploring available resources before query
 
 ---
 
-### `client$list_buckets()` <a name="clientlist_buckets">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$list_buckets()` <a name="clientlist_buckets">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -305,7 +305,7 @@ List all buckets accessible by the user. Buckets represent logical data storage 
 
 ---
 
-### `client$list_buckets_json()` <a name="clientlist_buckets_json">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$list_buckets_json()` <a name="clientlist_buckets_json">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -321,7 +321,7 @@ List all buckets accessible by the user. Buckets represent logical data storage 
 
 ---
 
-### `client$upload_dataframe()` <a name="clientupload_dataframe">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$upload_dataframe()` <a name="clientupload_dataframe">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -365,7 +365,7 @@ Uploads a dataframe from your R environment/code:
 
 ---
 
-### `client$upload_file()` <a name="clientupload_file">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$upload_file()` <a name="clientupload_file">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
@@ -397,7 +397,7 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 ---
 
-### `client$search_collections_by_keyword()` <a name="clientsearch_collections_by_keyword">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$search_collections_by_keyword()` <a name="clientsearch_collections_by_keyword">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example**:
 
@@ -417,7 +417,7 @@ client$search_collections_by_keyword(keyword="clinical reports")
 
 ---
 
-### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Examples**:
 
@@ -466,7 +466,7 @@ client$search_collections_query(
 
 ---
 
-### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example**:
 
@@ -486,7 +486,7 @@ client$search_files_by_keyword(keyword="genome")
 
 ---
 
-### `client$search_files_query()` <a name="clientsearch_files_query">:</a> [_\[click hete to go back to the top\]_](#index)
+### `client$search_files_query()` <a name="clientsearch_files_query">:</a> [_\[click here to go back to the top\]_](#index)
 
 **Basic Example**:
 
