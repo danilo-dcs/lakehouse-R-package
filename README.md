@@ -98,6 +98,11 @@ The lakehouse storage structure is divided in three levels:
 
 ### `client$auth()` <a name="clientauth">:</a> [_\[click hete to go back to the top\]_](#index)
 
+**Basic Example:**
+```r
+client$auth(email="your_email@mail.com", password="PASS")
+```
+
 **Description:**  
 Authenticates the user based on login details. It returns the authentication token.
 
@@ -106,17 +111,22 @@ Authenticates the user based on login details. It returns the authentication tok
 - email: A string containing the user email
 - password: A string containing the user's password
 
-**Basic Example:**
-```r
-client$auth(email="your_email@mail.com", password="PASS")
-```
 
 ---
 
 ### `client$create_collection()` <a name="clientcreate_collection">:</a> [_\[click hete to go back to the top\]_](#index)
 
+**Basic Example:**
+```r
+client$create_collection(
+  collection_name="YOUR_COLLETION_NAME", 
+  storage_type="gcs", 
+  bucket_name="AVAILABLE_STORAGE_BUCKET_NAME"
+)
+```
+
 **Description:**  
-Creates a new collection of files. Returns the collection's name.
+Creates a new collection of files. Returns the newly created collection details.
 
 **Parameters:**
 
@@ -131,18 +141,18 @@ Creates a new collection of files. Returns the collection's name.
 
 - A dictionary containing the collection item in the catalog
 
-**Basic Example:**
-```r
-client$create_collection(
-  collection_name="YOUR_COLLETION_NAME", 
-  storage_type="gcs", 
-  bucket_name="AVAILABLE_STORAGE_BUCKET_NAME"
-)
-```
 
 ---
 
 ### `client$download_file()` <a name="clientdownload_file">:</a> [_\[click hete to go back to the top\]_](#index)
+
+**Basic Example:**
+```r
+client$download_file(
+  catalog_file_id="0197ead3-028c-797e-8717-5441be78a0e4", 
+  output_file_dir="LOCAL_COMPUTER_PATH"
+)
+```
 
 **Description:**  
 Downloads a file from the lakehouse catalog using its catalog ID. Returns the local path where the file was saved.
@@ -156,20 +166,18 @@ Downloads a file from the lakehouse catalog using its catalog ID. Returns the lo
 
 - A string containing the output file address
 
-**Basic Example:**
-```r
-client$download_file(
-  catalog_file_id="0197ead3-028c-797e-8717-5441be78a0e4", 
-  output_file_dir="LOCAL_COMPUTER_PATH"
-)
-```
 
 ---
 
 ### `client$get_dataframe()` <a name="clientget_dataframe">:</a> [_\[click hete to go back to the top\]_](#index)
 
+**Basic Example:**
+```r
+client$get_dataframe(catalog_file_id="0197ead3-028c-797e-8717-5441be78a0e4")
+```
+
 **Description:**  
-Get a file as a dataframe.  
+Fetches a file from storage and loads it as an R-formatted dataframe.  
 
 **Condition:**  
 Only works if the catalog marks the file as 'structured' (or file format is CSV, XLSX, TSV, JSON, MD, HTML, TEX, or PARQUET).  
@@ -182,17 +190,18 @@ Only works if the catalog marks the file as 'structured' (or file format is CSV,
 
 - It returns a pandas dataframe of the desired file
 
-**Basic Example:**
-```r
-client$get_dataframe(catalog_file_id="0197ead3-028c-797e-8717-5441be78a0e4")
-```
 
 ---
 
 ### `client$list_collections()` <a name="clientlist_collections">:</a> [_\[click hete to go back to the top\]_](#index)
 
+**Basic Example:**
+```r
+client$list_collections()
+```
+
 **Description**
-List all available collections.
+List all available collections in the storage.
 
 **Arguments**
 
@@ -202,17 +211,18 @@ List all available collections.
 **Returns**
 Returns a table-formatted string with the collections records. cat() command is recommended to visualize the formatted table
 
-**Basic Example:**
-```r
-client$list_collections()
-```
 
 ---
 
 ### `client$list_collections_json()` <a name="clientlist_collections_json">:</a> [_\[click hete to go back to the top\]_](#index)
 
+**Basic Example:**
+```r
+client$list_collections_json()
+```
+
 **Description**
-List all available collections.
+List all available collections in the storage.
 
 **Arguments**
 
@@ -222,19 +232,19 @@ List all available collections.
 **Returns**
 Returns a json-formatted string with the collections records
 
-**Basic Example:**
-```r
-client$list_collections_json()
-```
 
 ---
 
 ### `client$list_files()` <a name="clientlist_files">:</a> [_\[click hete to go back to the top\]_](#index)
 
-List files in a given collection or bucket.  
+**Basic Example:**
+```r
+client$list_files()
+```
+
 **Description**:
 
-Useful for exploring available resources before querying or downloading.
+List files in the storage. Useful for exploring available resources before querying or downloading.
 
 **Arguments**
 
@@ -248,19 +258,19 @@ Useful for exploring available resources before querying or downloading.
 
 - It returns a table-formatted string with the files in the catalog. cat() command is recommended to visualize the formatted table
 
-**Basic Example:**
-```r
-client$list_files()
-```
 
 ---
 
 ### `client$list_files_json()` <a name="clientlist_files_json">:</a> [_\[click hete to go back to the top\]_](#index)
 
-List files in a given collection or bucket.  
+**Basic Example:**
+```r
+client$list_files_json()
+```
+
 **Description**:
 
-Useful for exploring available resources before querying or downloading.
+List files in the storage. Useful for exploring available resources before querying or downloading.
 
 **Arguments**
 
@@ -274,54 +284,57 @@ Useful for exploring available resources before querying or downloading.
 
 - It returns a json-formatted string with the files in the catalog
 
-**Basic Example:**
-```r
-client$list_files_json()
-```
 
 ---
 
 ### `client$list_buckets()` <a name="clientlist_buckets">:</a> [_\[click hete to go back to the top\]_](#index)
-
-List all buckets accessible by the user.  
-**Description**:
-Buckets represent logical data partitions or storage spaces.
-
-**Returns:**
-
-- It returns a table-formatted string containing all the storage buckets in the system, cat() command is recommended to visualize the formatted table
 
 **Basic Example:**
 ```r
 client$list_buckets()
 ```
 
----
 
-### `client$list_buckets_json()` <a name="clientlist_buckets_json">:</a> [_\[click hete to go back to the top\]_](#index)
-
-List all buckets accessible by the user.  
 **Description**:
-Buckets represent logical data partitions or storage spaces.
+List all buckets accessible by the user. Buckets represent logical data storage partition.
 
 **Returns:**
 
-- It returns a json-formatted string containing all the storage buckets in the system
+- It returns a table-formatted string containing all the storage buckets in the system, cat() command is recommended to visualize the formatted table
+
+
+---
+
+### `client$list_buckets_json()` <a name="clientlist_buckets_json">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Basic Example:**
 ```r
 client$list_buckets_json()
 ```
 
+**Description**:
+List all buckets accessible by the user. Buckets represent logical data storage partition.
+
+**Returns:**
+
+- It returns a json-formatted string containing all the storage buckets in the system
+
 ---
 
 ### `client$upload_dataframe()` <a name="clientupload_dataframe">:</a> [_\[click hete to go back to the top\]_](#index)
 
-Upload a pandas DataFrame to the lakehouse.
+**Basic Example:**
+```r
+client$upload_dataframe(
+  df=df_variable,
+  df_name="DATASET_NAME", 
+  collection_catalog_id="0197eada-cedb-77d5-8935-b319b59fae02"
+)
+```
 
 **Description**:
 
-Prepares a new file for upload from local storage. This operation returns the following:
+Uploads a dataframe from your R environment/code:
 
 - Upload token
 - Credential ID
@@ -349,18 +362,20 @@ Prepares a new file for upload from local storage. This operation returns the fo
 - `processing_level` _(Optional, default: `raw`)_:  
   Indicates the processing level of the dataframe (e.g., `raw`, `processed`, etc.).
 
-**Basic Example:**
-```r
-client$upload_dataframe(
-  df=df_variable,
-  df_name="DATASET_NAME", 
-  collection_catalog_id="0197eada-cedb-77d5-8935-b319b59fae02"
-)
-```
 
 ---
 
 ### `client$upload_file()` <a name="clientupload_file">:</a> [_\[click hete to go back to the top\]_](#index)
+
+**Basic Example:**
+```r
+client.upload_file(
+  local_file_path="/Desktop/files/sample/sequences.fasta", 
+  final_file_name="sequences_dengue.fasta",
+  collection_catalog_id="0197eada-cedb-77d5-8935-b319b59fae02",
+  file_category="unstructured"
+)
+```
 
 **Description:**  
 Set up a new file to be uploaded from local storage. It returns the catalog item for the new file uploaded.  
@@ -380,19 +395,15 @@ Set up a new file to be uploaded from local storage. It returns the catalog item
 
 - A dictionary containing the file id in the catalog and the file name
 
-**Basic Example:**
-```r
-client.upload_file(
-  local_file_path="/Desktop/files/sample/sequences.fasta", 
-  final_file_name="sequences_dengue.fasta",
-  collection_catalog_id="0197eada-cedb-77d5-8935-b319b59fae02",
-  file_category="unstructured"
-)
-```
-
 ---
 
 ### `client$search_collections_by_keyword()` <a name="clientsearch_collections_by_keyword">:</a> [_\[click hete to go back to the top\]_](#index)
+
+**Basic Example**:
+
+```r
+client$search_collections_by_keyword(keyword="clinical reports")
+```
 
 **Description**: Search the collections in the catalogue by keyword. Enables discovery of collections of datasets based on a specified keyword
 
@@ -404,15 +415,25 @@ client.upload_file(
 
 - It returns the collections reccords in the specified output format.
 
-**Basic Example**:
-
-```r
-client$search_collections_by_keyword(keyword="clinical reports")
-```
-
 ---
 
 ### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_\[click hete to go back to the top\]_](#index)
+
+**Basic Examples**:
+
+1. The following example searches any collection that contains the word 'covid' in its name.
+```r
+client$search_collections_query('collection_name*covid')
+```
+
+2. The following example search for any collection named `covv_patient_data`, inserted_by equals `0197eae8-bc59-7ac4-80b3-81bfec379f7e:user1@gmail.com` and inserted_at greater than `1747934722` (date in miliseconds)
+```r
+client$search_collections_query(
+  'collection_name=covv_patient_data',
+  'inserted_by=0197eae8-bc59-7ac4-80b3-81bfec379f7e:user1@gmail.com',
+  'inserted_at>1747934722'
+)
+```
 
 **Description**: Query the collections in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
@@ -443,25 +464,15 @@ client$search_collections_by_keyword(keyword="clinical reports")
 - `collection_description`
 - `public`
 
-**Basic Examples**:
-
-1. The following example searches any collection that contains the word 'covid' in its name.
-```r
-client$search_collections_query('collection_name*covid')
-```
-
-2. The following example search for any collection named `covv_patient_data`, inserted_by equals `0197eae8-bc59-7ac4-80b3-81bfec379f7e:user1@gmail.com` and inserted_at greater than `1747934722` (date in miliseconds)
-```r
-client$search_collections_query(
-  'collection_name=covv_patient_data',
-  'inserted_by=0197eae8-bc59-7ac4-80b3-81bfec379f7e:user1@gmail.com',
-  'inserted_at>1747934722'
-)
-```
-
 ---
 
 ### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a> [_\[click hete to go back to the top\]_](#index)
+
+**Basic Example**:
+
+```r
+client$search_files_by_keyword(keyword="genome")
+```
 
 **Description**: Search the files in the catalogue by keyword. Enables discovery of files of datasets based on a specified keyword
 
@@ -473,15 +484,26 @@ client$search_collections_query(
 
 - It returns the files reccords in the specified output format.
 
-**Basic Example**:
-
-```r
-client$search_files_by_keyword(keyword="genome")
-```
-
 ---
 
 ### `client$search_files_query()` <a name="clientsearch_files_query">:</a> [_\[click hete to go back to the top\]_](#index)
+
+**Basic Example**:
+
+1. The following example searches any files with the word `sequence` in its file_name.
+```r
+client$search_files_query('file_name*sequence')
+```
+
+2. The following example searches any file named `zika_count.csv`, inserted_at data is greater than `1747934722` (date in miliseconds), processing level is equal `raw`, and file_category equals `structured`.
+```r
+client$search_files_query(
+  'file_name=zika_count.csv',
+  'inserted_at>1747934722', 
+  'processing_level=raw', 
+  'file_category=structured'
+)
+```
 
 **Description**: Query the files in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
@@ -514,22 +536,5 @@ client$search_files_by_keyword(keyword="genome")
 - `file_category`
 - `file_version`
 - `public`
-
-**Basic Example**:
-
-1. The following example searches any files with the word `sequence` in its file_name.
-```r
-client$search_files_query('file_name*sequence')
-```
-
-2. The following example searches any file named `zika_count.csv`, inserted_at data is greater than `1747934722` (date in miliseconds), processing level is equal `raw`, and file_category equals `structured`.
-```r
-client$search_files_query(
-  'file_name=zika_count.csv',
-  'inserted_at>1747934722', 
-  'processing_level=raw', 
-  'file_category=structured'
-)
-```
 
 ---
