@@ -545,7 +545,7 @@ setup_client <- function(url) {
         final_file_name, 
         collection_catalog_id, 
         file_category = "unstructured", 
-        file_description = NULL,
+        file_description = "empty",
         file_version = 1,
         public = FALSE,
         processing_level = "raw"
@@ -560,18 +560,9 @@ setup_client <- function(url) {
             file_version = file_version,
             file_size = file_size,
             public = public,
-            processing_level = processing_level
-        )
-
-        optional_params <- list(
+            processing_level = processing_level,
             file_description = file_description
         )
-
-        for (name in names(optional_params)) {
-            if (!is.null(optional_params[[name]])) {
-                payload[[name]] <- optional_params[[name]]
-            }
-        }
 
         print(payload)
 
