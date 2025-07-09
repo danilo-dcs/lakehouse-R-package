@@ -419,7 +419,7 @@ client$search_collections_by_keyword(keyword="clinical reports")
 
 ### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_\[click here to go back to the top\]_](#index)
 
-1. The following *example* searches any collection that contains the word 'covid' in its name.
+1. The following *example* searches any collection that contains the word 'covid' in its name using the wildcard operator `*`.
 ```r
 client$search_collections_query('collection_name*covid')
 ```
@@ -486,7 +486,7 @@ client$search_files_by_keyword(keyword="genome")
 
 ### `client$search_files_query()` <a name="clientsearch_files_query">:</a> [_\[click here to go back to the top\]_](#index)
 
-1. The following *example* searches any files with the word `sequence` in its file_name.
+1. The following *example* searches any files with the word `sequence` in its file_name using the wildcard operator `*`.
 ```r
 client$search_files_query('file_name*sequence')
 ```
