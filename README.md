@@ -450,7 +450,7 @@ client$search_collections_query(
 `SEARCH_PARAMETER <OPERATOR> VALUE`
 
 - SEARCH_PARAMETER: must be one of the query parameters listed below
-- OPERATOR: must be one of the following "=", ">","<", ">=", "<=" or the wildcard operator "\*" (substring match)
+- OPERATOR: must be one of the following "=", ">","<", ">=", "<=" or "\*" (wildcard operator to match any substring in a property)
 - VALUE: Value for each parameter
 
 **Search Parameters List**:
@@ -520,7 +520,7 @@ client$search_files_query(
 `SEARCH_PARAMETER <OPERATOR> VALUE`
 
 - SEARCH_PARAMETER: must be one of the query parameters listed below
-- OPERATOR: must be one of the following "=", ">","<", ">=", "<=" or the wildcard operator "\*" (substring match)
+- OPERATOR: must be one of the following "=", ">","<", ">=", "<=" or "\*" (wildcard operator to match any substring in a property)
 - VALUE: Value for each parameter
 
 **Search Parameters List**:
