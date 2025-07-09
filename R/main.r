@@ -250,7 +250,7 @@ setup_client <- function(url) {
     #' @export
     get_dataframe <- function(catalogue_file_id) {
 
-        file_load_path <- "./"
+        file_load_path <- getwd()
 
         downloaded_file_path <- download_file(
             catalog_file_id = catalogue_file_id,
