@@ -213,30 +213,23 @@ setup_client <- function(url) {
         public = NULL,
         secret = NULL
     ) {
+        
         payload <- list(
             storage_type = storage_type,
-            collection_name = collection_name
-        )
-
-        if(storage_type == "hdfs"){
-            payload[["namenode_address"]] <- bucket_name
-        } else {
-            payload[["bucket_name"]] <- bucket_name
-        }
-
-        optional_params <- list(
+            collection_name = collection_name,
             collection_description = collection_description,
             public = public,
             secret = secret
         )
-
-        for (name in names(optional_params)) {
-            if (!is.null(optional_params[[name]])) {
-                payload[[name]] <- optional_params[[name]]
-            }
+    
+        if (storage_type == "hdfs") {
+            payload[["namenode_address"]] <- bucket_name
+        } else {
+            payload[["bucket_name"]] <- bucket_name
         }
-
-        payload <- payload[!sapply(payload, is.null)]
+        
+        # Remove NULL elements using purrr::compact()
+        payload <- purrr::compact(payload)
 
         endpoint <- "/storage/collections/create"
 

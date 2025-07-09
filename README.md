@@ -4,13 +4,23 @@ This R lib supports the access to the lakehouse app via R scripts
 
 ## 📌 Installation and usage
 
-To intall the library:
+To intall the library you first need to install the devtools package:
 
 ```r
 install.packages("devtools")
 library("devtools")
+```
 
-devtools::install_github("danilo-dcs/lakehouse-R-package", upgrade = "always", dependencies = TRUE)
+To install the lakehouse library, run:
+
+```r
+devtools::install_github(
+  "danilo-dcs/lakehouse-R-package",
+  upgrade = "always",
+  dependencies = TRUE,
+  quiet = TRUE,
+  repos = "https://cloud.r-project.org"
+)
 ```
 
 To import the main class add the following code into your script:
