@@ -573,7 +573,11 @@ setup_client <- function(url) {
             }
         }
 
+        print(payload)
+
         payload <- payload[!sapply(payload, is.null)]
+
+        print(payload)
         
         endpoint <- "/storage/files/upload-request"
    
