@@ -215,8 +215,8 @@ setup_client <- function(url) {
     ) {
 
         payload <- list(
-            storage_type = storage_type,
             collection_name = collection_name,
+            storage_type = storage_type,
             collection_description = collection_description,
             public = public,
             secret = secret
