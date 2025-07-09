@@ -419,14 +419,12 @@ client$search_collections_by_keyword(keyword="clinical reports")
 
 ### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_\[click here to go back to the top\]_](#index)
 
-**Basic Examples**:
-
-1. The following example searches any collection that contains the word 'covid' in its name.
+1. The following *example* searches any collection that contains the word 'covid' in its name.
 ```r
 client$search_collections_query('collection_name*covid')
 ```
 
-2. The following example search for any collection named `covv_patient_data`, inserted_by equals `0197eae8-bc59-7ac4-80b3-81bfec379f7e:user1@gmail.com` and inserted_at greater than `1747934722` (date in miliseconds)
+2. The following *example* search for any collection named `covv_patient_data`, inserted_by equals `0197eae8-bc59-7ac4-80b3-81bfec379f7e:user1@gmail.com` and inserted_at greater than `1747934722` (date in miliseconds)
 ```r
 client$search_collections_query(
   'collection_name=covv_patient_data',
@@ -488,14 +486,12 @@ client$search_files_by_keyword(keyword="genome")
 
 ### `client$search_files_query()` <a name="clientsearch_files_query">:</a> [_\[click here to go back to the top\]_](#index)
 
-**Basic Example**:
-
-1. The following example searches any files with the word `sequence` in its file_name.
+1. The following *example* searches any files with the word `sequence` in its file_name.
 ```r
 client$search_files_query('file_name*sequence')
 ```
 
-2. The following example searches any file named `zika_count.csv`, inserted_at data is greater than `1747934722` (date in miliseconds), processing level is equal `raw`, and file_category equals `structured`.
+2. The following *example* searches any file named `zika_count.csv`, inserted_at data is greater than `1747934722` (date in miliseconds), processing level is equal `raw`, and file_category equals `structured`.
 ```r
 client$search_files_query(
   'file_name=zika_count.csv',
