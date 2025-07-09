@@ -209,17 +209,17 @@ setup_client <- function(url) {
         collection_name,
         storage_type,
         bucket_name,
-        collection_description = NULL,
-        public = NULL,
-        secret = NULL
+        collection_description = "default",
+        public = FALSE,
+        secret = FALSE
     ) {
 
         payload <- list(
             storage_type = storage_type,
             collection_name = collection_name,
-            collection_description = "",
-            public = FALSE,
-            secret = FALSE
+            collection_description = collection_description,
+            public = public,
+            secret = secret
         )
     
         if (storage_type == "hdfs") {
