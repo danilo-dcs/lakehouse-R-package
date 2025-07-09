@@ -232,6 +232,7 @@ setup_client <- function(url) {
         payload <- purrr::compact(payload)
 
         print(payload)
+        print(jsonlite::toJSON(payload, auto_unbox = TRUE))
 
         endpoint <- "/storage/collections/create"
 
