@@ -490,7 +490,7 @@ setup_client <- function(url) {
         df,
         df_name,
         collection_catalog_id,
-        dataframe_description = "",
+        dataframe_description = "empty",
         file_category = "structured",
         dataframe_version = 1,
         public = FALSE,
