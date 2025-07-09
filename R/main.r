@@ -231,9 +231,6 @@ setup_client <- function(url) {
         # Remove NULL elements using purrr::compact()
         payload <- purrr::compact(payload)
 
-        print(payload)
-        print(jsonlite::toJSON(payload, auto_unbox = TRUE))
-
         endpoint <- "/storage/collections/create"
 
         response <- make_request__(
@@ -497,24 +494,35 @@ setup_client <- function(url) {
         public = FALSE,
         processing_level = "raw"
     ) {
-        df_file_path <- paste0(getwd(), "/", df_name, ".csv") 
-        write.csv(df, file = df_file_path, row.names = FALSE) 
-
-        upload_response <-  upload_file(
+        # Create temp file (safer than working directory)
+        df_file_path <- tempfile(pattern = df_name, fileext = ".csv")
+        
+        # Write with error handling
+        tryCatch({
+            write.csv(df, file = df_file_path, row.names = FALSE)
+        }, error = function(e) {
+            stop("Failed to write dataframe to temporary file: ", e$message)
+        })
+        
+        # Ensure file cleanup happens even if upload fails
+        on.exit({
+            if (file.exists(df_file_path)) {
+                file.remove(df_file_path)
+            }
+        })
+        
+        # Directly call upload_file with parameters
+        upload_response <- upload_file(
             local_file_path = df_file_path,
             final_file_name = paste0(df_name, ".csv"),
             collection_catalog_id = collection_catalog_id,
-            file_category="structured",
-            file_description=dataframe_description,
-            file_version=dataframe_version,
-            public=public,
-            processing_level=processing_level
+            file_category = file_category,
+            file_description = dataframe_description,
+            file_version = dataframe_version,
+            public = public,
+            processing_level = processing_level
         )
         
-        if(file.exists(file=df_file_path)){
-            file.remove(df_file_path)
-        }
-
         return(upload_response)
     }
 
