@@ -96,7 +96,7 @@ The lakehouse storage structure is divided in three levels:
 
 ## 🔧 Function Details
 
-### `client$auth()` <a name="clientauth">:</a> [_(go back to the top)_](#index)
+### `client$auth()` <a name="clientauth">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description:**  
 Authenticates the user based on login details. It returns the authentication token.
@@ -113,7 +113,7 @@ client$auth(email="your_email@mail.com", password="PASS")
 
 ---
 
-### `client$create_collection()` <a name="clientcreate_collection">:</a> [_(go back to the top)_](#index)
+### `client$create_collection()` <a name="clientcreate_collection">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description:**  
 Creates a new collection of files. Returns the collection's name.
@@ -142,7 +142,7 @@ client$create_collection(
 
 ---
 
-### `client$download_file()` <a name="clientdownload_file">:</a> [_(go back to the top)_](#index)
+### `client$download_file()` <a name="clientdownload_file">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description:**  
 Downloads a file from the lakehouse catalog using its catalog ID. Returns the local path where the file was saved.
@@ -166,7 +166,7 @@ client$download_file(
 
 ---
 
-### `client$get_dataframe()` <a name="clientget_dataframe">:</a> [_(go back to the top)_](#index)
+### `client$get_dataframe()` <a name="clientget_dataframe">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description:**  
 Get a file as a dataframe.  
@@ -189,7 +189,7 @@ client$get_dataframe(catalog_file_id="0197ead3-028c-797e-8717-5441be78a0e4")
 
 ---
 
-### `client$list_collections()` <a name="clientlist_collections">:</a> [_(go back to the top)_](#index)
+### `client$list_collections()` <a name="clientlist_collections">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description**
 List all available collections.
@@ -209,7 +209,7 @@ client$list_collections()
 
 ---
 
-### `client$list_collections_json()` <a name="clientlist_collections_json">:</a> [_(go back to the top)_](#index)
+### `client$list_collections_json()` <a name="clientlist_collections_json">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description**
 List all available collections.
@@ -229,7 +229,7 @@ client$list_collections_json()
 
 ---
 
-### `client$list_files()` <a name="clientlist_files">:</a> [_(go back to the top)_](#index)
+### `client$list_files()` <a name="clientlist_files">:</a> [_\[click hete to go back to the top\]_](#index)
 
 List files in a given collection or bucket.  
 **Description**:
@@ -255,7 +255,7 @@ client$list_files()
 
 ---
 
-### `client$list_files_json()` <a name="clientlist_files_json">:</a> [_(go back to the top)_](#index)
+### `client$list_files_json()` <a name="clientlist_files_json">:</a> [_\[click hete to go back to the top\]_](#index)
 
 List files in a given collection or bucket.  
 **Description**:
@@ -281,7 +281,7 @@ client$list_files_json()
 
 ---
 
-### `client$list_buckets()` <a name="clientlist_buckets">:</a> [_(go back to the top)_](#index)
+### `client$list_buckets()` <a name="clientlist_buckets">:</a> [_\[click hete to go back to the top\]_](#index)
 
 List all buckets accessible by the user.  
 **Description**:
@@ -298,7 +298,7 @@ client$list_buckets()
 
 ---
 
-### `client$list_buckets_json()` <a name="clientlist_buckets_json">:</a> [_(go back to the top)_](#index)
+### `client$list_buckets_json()` <a name="clientlist_buckets_json">:</a> [_\[click hete to go back to the top\]_](#index)
 
 List all buckets accessible by the user.  
 **Description**:
@@ -315,7 +315,7 @@ client$list_buckets_json()
 
 ---
 
-### `client$upload_dataframe()` <a name="clientupload_dataframe">:</a> [_(go back to the top)_](#index)
+### `client$upload_dataframe()` <a name="clientupload_dataframe">:</a> [_\[click hete to go back to the top\]_](#index)
 
 Upload a pandas DataFrame to the lakehouse.
 
@@ -360,7 +360,7 @@ client$upload_dataframe(
 
 ---
 
-### `client$upload_file()` <a name="clientupload_file">:</a> [_(go back to the top)_](#index)
+### `client$upload_file()` <a name="clientupload_file">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description:**  
 Set up a new file to be uploaded from local storage. It returns the catalog item for the new file uploaded.  
@@ -392,7 +392,7 @@ client.upload_file(
 
 ---
 
-### `client$search_collections_by_keyword()` <a name="clientsearch_collections_by_keyword">:</a> [_(go back to the top)_](#index)
+### `client$search_collections_by_keyword()` <a name="clientsearch_collections_by_keyword">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description**: Search the collections in the catalogue by keyword. Enables discovery of collections of datasets based on a specified keyword
 
@@ -412,7 +412,7 @@ client$search_collections_by_keyword(keyword="clinical reports")
 
 ---
 
-### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_(go back to the top)_](#index)
+### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description**: Query the collections in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
@@ -461,7 +461,7 @@ client$search_collections_query(
 
 ---
 
-### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a> [_(go back to the top)_](#index)
+### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description**: Search the files in the catalogue by keyword. Enables discovery of files of datasets based on a specified keyword
 
@@ -481,7 +481,7 @@ client$search_files_by_keyword(keyword="genome")
 
 ---
 
-### `client$search_files_query()` <a name="clientsearch_files_query">:</a> [_(go back to the top)_](#index)
+### `client$search_files_query()` <a name="clientsearch_files_query">:</a> [_\[click hete to go back to the top\]_](#index)
 
 **Description**: Query the files in the catalogue based on query parameters. Enables discovery of collections of datasets based on a specified keyword
 
