@@ -86,12 +86,14 @@ The lakehouse storage structure is divided in three levels:
 - [client$upload_dataframe()](#clientupload_dataframe)
 - [client$upload_file()](#clientupload_file)
 
-### Search the lakehouse catalog
+### Basic Search 
 
 - [client$search_collections_by_keyword()](#clientsearch_collections_by_keyword)
-- [client$search_collections_query()](#clientsearch_collections_query)<br><br>
-
 - [client$search_files_by_keyword()](#clientsearch_files_by_keyword)
+
+### Advanced Search Query
+
+- [client$search_collections_query()](#clientsearch_collections_query)
 - [client$search_files_query()](#clientsearch_files_query)
 
 ## 🔧 Function Details
@@ -417,6 +419,26 @@ client$search_collections_by_keyword(keyword="clinical reports")
 
 ---
 
+### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a> [_\[click here to go back to the top\]_](#index)
+
+**Basic Example**:
+
+```r
+client$search_files_by_keyword(keyword="genome")
+```
+
+**Description**: Search the files in the catalogue by keyword. Enables discovery of files of datasets based on a specified keyword
+
+**Function Arguments**:
+
+- keyword (str): A string containing the string keyword to match with the file names
+
+**Returns:**
+
+- It returns the files reccords in the specified output format.
+
+---
+
 ### `client$search_collections_query()` <a name="clientsearch_collections_query">:</a> [_\[click here to go back to the top\]_](#index)
 
 
@@ -462,26 +484,6 @@ client$search_collections_query(
 - `inserted_at`
 - `collection_description`
 - `public`
-
----
-
-### `client$search_files_by_keyword()` <a name="clientsearch_files_by_keyword">:</a> [_\[click here to go back to the top\]_](#index)
-
-**Basic Example**:
-
-```r
-client$search_files_by_keyword(keyword="genome")
-```
-
-**Description**: Search the files in the catalogue by keyword. Enables discovery of files of datasets based on a specified keyword
-
-**Function Arguments**:
-
-- keyword (str): A string containing the string keyword to match with the file names
-
-**Returns:**
-
-- It returns the files reccords in the specified output format.
 
 ---
 
