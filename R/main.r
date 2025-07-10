@@ -561,8 +561,6 @@ setup_client <- function(url) {
 
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
-
-        print(paste0("File size: ", file_size))
         
         payload <- list(
             collection_catalog_id = collection_catalog_id,
@@ -575,11 +573,7 @@ setup_client <- function(url) {
             file_description = file_description
         )
 
-        print(payload)
-
         payload <- payload[!sapply(payload, is.null)]
-
-        print(payload)
         
         endpoint <- "/storage/files/upload-request"
    
@@ -589,9 +583,6 @@ setup_client <- function(url) {
             body = jsonlite::toJSON(payload, auto_unbox = TRUE),
             httr::content_type_json()
         )
-
-        print("response")
-        print(response)
         
         if (is.null(response)) {
             print(response)
