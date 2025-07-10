@@ -97,18 +97,39 @@ setup_client <- function(url) {
             return(data)
             
         }, error = function(e) {
-            if (inherits(e, "http_error")) {
+        # Check if this is an HTTP error and we have a response
+            if (!is.null(e$response)) {
                 response <- e$response
+                status_code <- httr::status_code(response)
+                
                 error_detail <- tryCatch({
                     resp_content <- httr::content(response, as = "text", encoding = "UTF-8")
                     parsed_content <- jsonlite::fromJSON(resp_content)
-                    if (!is.null(parsed_content$detail)) parsed_content$detail else resp_content
-                }, error = function(e) {
-                    "No error details provided"
+                    
+                    # Handle FastAPI's HTTPException format
+                    if (!is.null(parsed_content$detail)) {
+                        # If detail is a list (might happen with validation errors)
+                        if (is.list(parsed_content$detail)) {
+                            paste(sapply(parsed_content$detail, function(x) {
+                                if (is.list(x)) paste(x, collapse = "; ") else x
+                            }), collapse = "\n")
+                        } else {
+                            parsed_content$detail
+                        }
+                    } else {
+                        httr::http_status(response)$message
+                    }
+                }, error = function(parse_error) {
+                    # Fallback if we can't parse JSON
+                    paste("Raw error:", httr::content(response, as = "text", encoding = "UTF-8"))
                 })
-                
-                stop(paste0("API request failed (", httr::status_code(response), "): ", error_detail), call. = FALSE)
+
+                stop(sprintf("API request failed [%d %s]: %s",
+                        status_code,
+                        httr::http_status(response)$category,
+                        error_detail), call. = FALSE)
             } else {
+                # For non-HTTP errors or when there's no response
                 stop(paste0("Request failed: ", e$message), call. = FALSE)
             }
         })
