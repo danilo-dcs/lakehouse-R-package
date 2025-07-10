@@ -550,8 +550,19 @@ setup_client <- function(url) {
         public = FALSE,
         processing_level = "raw"
     ) {  
+
+        # required_fields <- c("collection_catalog_id", "final_file_name", "local_file_path")
+
+        # for (field in required_fields) {
+        #     if (is.null(get(field))) {
+        #         stop("Missing required field: ", field)
+        #     }
+        # }
+
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
+
+        print(paste0("File size: ", file_size))
         
         payload <- list(
             collection_catalog_id = collection_catalog_id,
@@ -578,6 +589,9 @@ setup_client <- function(url) {
             body = jsonlite::toJSON(payload, auto_unbox = TRUE),
             httr::content_type_json()
         )
+
+        print("response")
+        print(response)
         
         if (is.null(response)) {
             print(response)
@@ -889,7 +903,6 @@ setup_client <- function(url) {
 
         return(records)
     }
-
 
 
     return(
