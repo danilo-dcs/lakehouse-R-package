@@ -74,6 +74,14 @@ setup_client <- function(url) {
         return(df)
     }
 
+    get_filename <- function(path, keep_extension = TRUE) {
+        filename <- basename(path)  # Extracts the last part of the path (filename)
+        if (!keep_extension) {
+            filename <- tools::file_path_sans_ext(filename)  # Removes extension
+        }
+        return(filename)
+    }
+
     make_request__ <- function(endpoint, method = "POST", ...) {
         url <- paste0(lakehouse_url, endpoint)
 
@@ -582,6 +590,10 @@ setup_client <- function(url) {
 
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
+
+        print("")
+        print(get_filename(path = local_file_path))
+        print("")
         
         payload <- list(
             collection_catalog_id = collection_catalog_id,
