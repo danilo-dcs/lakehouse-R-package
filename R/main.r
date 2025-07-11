@@ -545,6 +545,7 @@ setup_client <- function(url) {
         # Directly call upload_file with parameters
         upload_response <- upload_file(
             local_file_path = df_file_path,
+            final_file_name = paste0(df_name, ".csv"),
             collection_catalog_id = collection_catalog_id,
             file_category = file_category,
             file_description = dataframe_description,
@@ -558,6 +559,7 @@ setup_client <- function(url) {
 
     #' Upload unstructured file funtion 
     #' @param local_file_path: the local path to the file to be uploaded
+    #' @param final_file_name: the output file name in the storage
     #' @param collection_catalog_id: the collection identifiyer, from the collection catalog, where the file will be placed in
     #' @param file_category: the file class must indicate if the file is 'structured' or 'unstructured', by default the file is set to be 'unstructured'. Structured files can be Columnar or document files such as csv, tsv, excel, json, parquet. 
     #' @param file_description [Optional]: Additional description for the file
@@ -569,6 +571,7 @@ setup_client <- function(url) {
     #' @export
     upload_file <- function(
         local_file_path, 
+        final_file_name, 
         collection_catalog_id, 
         file_category = "unstructured", 
         file_description = "empty",
@@ -587,16 +590,10 @@ setup_client <- function(url) {
 
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
-
-        final_name <- get_filename(path = local_file_path)
-
-        print("")
-        print(final_name)
-        print("")
         
         payload <- list(
             collection_catalog_id = collection_catalog_id,
-            file_name = final_name,
+            file_name = final_file_name,
             file_category = file_category,
             file_version = file_version,
             file_size = file_size,
