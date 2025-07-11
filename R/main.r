@@ -74,12 +74,22 @@ setup_client <- function(url) {
         return(df)
     }
 
-    get_filename <- function(path, keep_extension = TRUE) {
+    get_filename__ <- function(path, keep_extension = TRUE) {
         filename <- basename(path)  # Extracts the last part of the path (filename)
         if (!keep_extension) {
             filename <- tools::file_path_sans_ext(filename)  # Removes extension
         }
         return(filename)
+    }
+
+    get_file_extension__ <- function(path) {
+        filename <- basename(path)
+        dot_pos <- gregexpr("\\.([^.]*)$", filename)[[1]]
+        if (dot_pos > 0) {
+            return(substr(filename, dot_pos, nchar(filename)))
+        } else {
+            return("")
+        }
     }
 
     make_request__ <- function(endpoint, method = "POST", ...) {
@@ -591,10 +601,16 @@ setup_client <- function(url) {
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
 
-        file_name <- get_filename(path = local_file_path)
+        file_name <- get_filename__(path = local_file_path)
+
+        file_extension <- get_file_extension__(path = local_file_path)
+
+        file_neme_only <- get_filename__(path = file_name, keep_extension = FALSE)
 
         print(paste0("FILEPATH: ", local_file_path))
         print(paste0("FILENAME: ", file_name))
+        print(paste0("FILE_EXTENSION: ", file_extension))
+        print(paste0("FILE_NAME_ONLY: ", file_neme_only))
         
         payload <- list(
             collection_catalog_id = collection_catalog_id,
