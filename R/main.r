@@ -601,16 +601,16 @@ setup_client <- function(url) {
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
 
-        file_name <- get_filename__(path = local_file_path)
-
         file_extension <- get_file_extension__(path = local_file_path)
 
-        file_neme_only <- get_filename__(path = file_name, keep_extension = FALSE)
-
-        print(paste0("FILEPATH: ", local_file_path))
-        print(paste0("FILENAME: ", file_name))
-        print(paste0("FILE_EXTENSION: ", file_extension))
-        print(paste0("FILE_NAME_ONLY: ", file_neme_only))
+        if (nzchar(file_extension)) {  # Only process if extension exists
+            has_extension <- endsWith(tolower(final_file_name), tolower(file_extension))
+            final_file_name <- if (!has_extension) {
+                paste0(final_file_name, file_extension)
+            } else {
+                final_file_name
+            }
+        }
         
         payload <- list(
             collection_catalog_id = collection_catalog_id,
