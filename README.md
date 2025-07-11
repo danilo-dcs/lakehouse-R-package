@@ -377,7 +377,7 @@ Uploads a dataframe from your R environment/code:
 
 **Basic Example:**
 ```r
-client.upload_file(
+client$upload_file(
   local_file_path="/Desktop/files/sample/sequences.fasta", 
   final_file_name="sequences_dengue.fasta",
   collection_catalog_id="0197eada-cedb-77d5-8935-b319b59fae02",
