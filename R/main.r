@@ -590,6 +590,11 @@ setup_client <- function(url) {
 
         print("uploading File ...")
         file_size <- file.info(local_file_path)$size
+
+        file_name <- get_filename(path = local_file_path)
+
+        print(paste0("FILEPATH: ", local_file_path))
+        print(paste0("FILENAME: ", file_name))
         
         payload <- list(
             collection_catalog_id = collection_catalog_id,
