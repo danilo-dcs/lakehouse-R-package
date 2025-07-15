@@ -645,7 +645,7 @@ setup_client <- function(url) {
         file_conn <- file(local_file_path, "rb")
         
         while (TRUE) {
-            chunk <- readBin(file_conn, raw(), 1024 * 1024)
+            chunk <- readBin(file_conn, raw(), 10 * 1024 * 1024)
             
             if (length(chunk) == 0) {
                 break
