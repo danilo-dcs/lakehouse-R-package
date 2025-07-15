@@ -68,7 +68,7 @@ The lakehouse storage structure is divided in three levels:
 
 - [client$download_file()](#clientdownload_file)
 
-### Downloading and parsing dataframe
+### Fetching dataframe
 
 - [client$get_dataframe()](#clientget_dataframe)
 
