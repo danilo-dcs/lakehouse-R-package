@@ -181,7 +181,7 @@ Downloads a file from the lakehouse catalog using its catalog ID. Returns the lo
 
 **Basic Example:**
 ```r
-client$get_dataframe(catalogue_file_id="0197ead3-028c-797e-8717-5441be78a0e4")
+client$get_dataframe(catalog_file_id="0197ead3-028c-797e-8717-5441be78a0e4")
 ```
 
 **Description:**  
@@ -192,7 +192,7 @@ Only works if the catalog marks the file as 'structured' (or file format is CSV,
 
 **Parameters:**
 
-- `catalogue_file_id`: the file ID in the catalog
+- `catalog_file_id`: the file ID in the catalog
 
 **Returns:**
 
