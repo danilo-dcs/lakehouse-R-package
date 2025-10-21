@@ -3,9 +3,10 @@
 \title{Lakehouse Client Functions}
 
 \section{Client Setup}{
-  \code{client <- setup_client("lakehouse-url")}
+  \code{client <- setup_client("lakehouse-url", "protocol")}
 
-  *To initialize the client and use its funtions to interact with the lakehouse system, you need to setup the client by specifying the lakehouse-api url.
+  - To initialize the client and use its funtions to interact with the lakehouse system, you need to setup the client by specifying the lakehouse-api url.
+  - The protocol can be set to http (default is https)
 }
 
 \section{Methods}{
