@@ -20,7 +20,7 @@ setup_client <- function(url, protocol = "https") {
   
     lakehouse_url <- paste0(protocol, "://", domain)
   
-    print(paste0()"Lakehouse URL: ", lakehouse_url))
+    print(paste0("Lakehouse URL: ", lakehouse_url))
     
     user_id <- NULL
     user_role <- NULL
