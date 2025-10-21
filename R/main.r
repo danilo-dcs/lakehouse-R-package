@@ -13,10 +13,10 @@
 #' 
 #' Setup Lakehouse Client function
 #' @export
-setup_client <- function(url) {
+setup_client <- function(url, protocol = "https") {
 
     domain <- gsub("^https?://", "", url)
-    lakehouse_url <- paste0("http://", domain)
+    lakehouse_url <- paste0(protocol,"://", domain)
     
     user_id <- NULL
     user_role <- NULL
