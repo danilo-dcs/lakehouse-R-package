@@ -19,9 +19,7 @@ setup_client <- function(url, protocol = "https") {
     domain <- sub("/+$", "", domain)  
   
     lakehouse_url <- paste0(protocol, "://", domain)
-  
-    print(paste0("Lakehouse URL: ", lakehouse_url))
-    
+      
     user_id <- NULL
     user_role <- NULL
     user_email<- NULL
@@ -100,9 +98,6 @@ setup_client <- function(url, protocol = "https") {
         url <- paste0(lakehouse_url, endpoint)
 
         headers <- c(Authorization = paste("Bearer", access_token))
-
-        print(paste0("Lakehouse url: ", url))
-        print(paste0("headers: ", headers))
         
         tryCatch({
             response <- httr::VERB(
@@ -118,8 +113,6 @@ setup_client <- function(url, protocol = "https") {
             response_text <- httr::content(response, as = "text", encoding = "UTF-8")
             
             data <- jsonlite::fromJSON(response_text)
-
-            print(paste0("data: ", data))
 
             return(data)
             
