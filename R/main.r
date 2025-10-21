@@ -15,7 +15,7 @@
 #' @export
 setup_client <- function(url, protocol = "https") {
 
-    domain <- gsub("^https?://", "", url)
+    domain <- sub("^https?://", "", url)
     lakehouse_url <- paste0(protocol,"://", domain)
     
     user_id <- NULL
