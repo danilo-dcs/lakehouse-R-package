@@ -32,7 +32,7 @@ library(LakehouseClient)
 To use the lakehouse functionalities create an instance of LakehouseClient by running:
 
 ```r
-client <- setup_client("lakehouse_app_url")
+client <- setup_client("https://lakehouse-api.pathotrack.health")
 ```
 
 _If you are facing issues to install the LakehouseClient library and it's dependencies on RStudio, please try to create a new empty RStudio project and the import the LakehouseClient library_.
