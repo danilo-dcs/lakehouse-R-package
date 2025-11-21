@@ -20,11 +20,8 @@ setup_client <- function(url, protocol = "https") {
   
     lakehouse_url <- paste0(protocol, "://", domain)
       
-    user_id <- NULL
-    user_role <- NULL
-    user_email<- NULL
     access_token <- NULL
-    access_token_type <- NULL
+    
     file_load_path <- "./" 
 
     format_size__ <- function(bytes) {
@@ -175,11 +172,7 @@ setup_client <- function(url, protocol = "https") {
         )
         
         if (!is.null(response)) {
-            user_id <<- response$user_id
-            user_role <<- response$user_role
             access_token <<- response$access_token
-            access_token_type <<- response$token_type
-            user_email <<- email
 
             return("Session Authenticated!")
         } else {
